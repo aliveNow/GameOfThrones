@@ -7,6 +7,7 @@ import ru.skillbranch.gameofthrones.repositories.RootRepository
 
 class SplashViewModel : ViewModel() {
 
+    val showAnimation = MutableLiveData<Boolean>()
     val navigateToMain = MutableLiveData<Boolean>() //FIXME: eventLiveData
     private val viewModelJob = SupervisorJob()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -23,6 +24,11 @@ class SplashViewModel : ViewModel() {
     private fun loadData() {
         uiScope.launch {
             withContext(Dispatchers.IO) {
+                delay(1000)
+            }
+            showAnimation.value = true
+            withContext(Dispatchers.IO) {
+                delay(7000) //FIXME: !!!
                 with(RootRepository) {
                     val isNeedUpdate = isNeedUpdate()
                     if (isNeedUpdate) {

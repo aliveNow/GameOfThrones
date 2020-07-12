@@ -5,8 +5,17 @@
     android:layout_height="match_parent"
     tools:context=".ui.splash.SplashFragment">
 
-    <ProgressBar
+    <ImageView
+        android:id="@+id/imgFirst"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/spash"
+        />
+
+    <com.zys.brokenview.BrokenView
+        android:id="@+id/brokenView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </FrameLayout>
