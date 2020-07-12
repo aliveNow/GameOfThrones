@@ -5,17 +5,29 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.skillbranch.gameofthrones.data.local.entities.CharacterItem
 import ru.skillbranch.gameofthrones.databinding.ItemCharacterBinding
+import java.lang.NumberFormatException
 
 class CharactersListAdapter : RecyclerView.Adapter<CharactersListAdapter.ViewHolder>() {
 
     var items: List<CharacterItem> = emptyList()
     var onItemClickListener: ((CharacterItem) -> Unit)? = null
 
+    init {
+        setHasStableIds(true)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ItemCharacterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             .run { ViewHolder(this) }
 
     override fun getItemCount(): Int = items.count()
+
+    override fun getItemId(position: Int): Long =
+        try {
+            items[position].id.toLong()
+        } catch (ne: NumberFormatException) {
+            super.getItemId(position)
+        }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
