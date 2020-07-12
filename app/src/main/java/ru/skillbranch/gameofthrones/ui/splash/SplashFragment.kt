@@ -1,6 +1,5 @@
 package ru.skillbranch.gameofthrones.ui.splash
 
-import android.graphics.Point
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import com.zys.brokenview.BrokenCallback
 import ru.skillbranch.gameofthrones.R
 import ru.skillbranch.gameofthrones.databinding.FragmentSplashBinding
 
@@ -16,7 +16,6 @@ class SplashFragment : Fragment() {
 
     private lateinit var viewModel: SplashViewModel
     private lateinit var vb: FragmentSplashBinding
-    //private lateinit var brokenView: BrokenView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,9 +24,37 @@ class SplashFragment : Fragment() {
         .also { vb = it }
         .root
 
+    var firstImageId: Int = R.drawable.spash
+    var secondImageId: Int = R.drawable.stark_coast_of_arms
+
+    val imageIds = listOf(
+        R.drawable.stark_coast_of_arms,
+        R.drawable.lannister__coast_of_arms,
+        R.drawable.baratheon_coast_of_arms,
+        R.drawable.greyjoy_coast_of_arms,
+        R.drawable.martel_coast_of_arms,
+        R.drawable.baratheon_coast_of_arms
+    )
+
+    var imagePosition = 0
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //brokenView = BrokenView.add2Window(requireActivity())
+        vb.brokenView.setCallback(object : BrokenCallback() {
+            override fun onFallingEnd(v: View?) {
+                imagePosition = when (imagePosition) {
+                    imageIds.size - 1 -> 0
+                    else -> imagePosition + 1
+                }
+                firstImageId = secondImageId
+                secondImageId = imageIds[imagePosition]
+                vb.imgFirst.setImageDrawable(requireContext().getDrawable(firstImageId))
+                vb.imgSecond.setImageDrawable(requireContext().getDrawable(secondImageId))
+                vb.imgFirst.visibility = View.VISIBLE
+                vb.brokenView.reset()
+                vb.brokenView.createAnimator(vb.imgFirst).start()
+            }
+        })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -37,8 +64,7 @@ class SplashFragment : Fragment() {
             findNavController().navigate(R.id.actionFromSplashFragmentToMainFragment)
         })
         viewModel.showAnimation.observe(viewLifecycleOwner, Observer {
-
-            vb.brokenView.createAnimator(view?.findViewById(R.id.imgFirst), Point(150, 150), null)
+            vb.brokenView.createAnimator(vb.imgFirst)
                 .start()
         })
     }

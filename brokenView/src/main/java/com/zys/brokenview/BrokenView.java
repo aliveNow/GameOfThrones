@@ -20,7 +20,7 @@ import java.util.ListIterator;
 
 public class BrokenView extends View {
 
-    private HashMap<View,BrokenAnimator> animMap;
+    private HashMap<View, BrokenAnimator> animMap;
     private LinkedList<BrokenAnimator> animList;
     private BrokenCallback callBack;
     private boolean enable;
@@ -46,39 +46,44 @@ public class BrokenView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         ListIterator<BrokenAnimator> iterator = animList.listIterator(animList.size());
-        while(iterator.hasPrevious()) {
+        while (iterator.hasPrevious()) {
             iterator.previous().draw(canvas);
         }
     }
 
     public BrokenAnimator getAnimator(View view) {
         BrokenAnimator bAnim = animMap.get(view);
-        if(bAnim != null && bAnim.getStage() != BrokenAnimator.STAGE_EARLYEND)
+        if (bAnim != null && bAnim.getStage() != BrokenAnimator.STAGE_EARLYEND)
             return bAnim;
         else
             return null;
     }
 
-    public BrokenAnimator createAnimator(final View view,Point point,BrokenConfig config){
+    public BrokenAnimator createAnimator(View view) {
+        return createAnimator(view, new Point(view.getWidth() / 2, view.getHeight() / 2), null);
+    }
+
+    public BrokenAnimator createAnimator(final View view, Point point, BrokenConfig config) {
         Bitmap bitmap = Utils.convertViewToBitmap(view);
-        if(bitmap == null)
+        if (bitmap == null)
             return null;
         if (config == null) {
             config = new BrokenConfig(getWidth(), getHeight());
         }
-        BrokenAnimator bAnim = new BrokenAnimator(this,view,bitmap,point,config);
+        BrokenAnimator bAnim = new BrokenAnimator(this, view, bitmap, point, config);
         bAnim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationRepeat(Animator animation) {
                 super.onAnimationRepeat(animation);
-                BrokenAnimator bAnim = (BrokenAnimator)animation;
+                BrokenAnimator bAnim = (BrokenAnimator) animation;
                 // We can't set FallingDuration here because it
                 // change the duration of STAGE_BREAKING.
                 bAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {
-                        BrokenAnimator bA = (BrokenAnimator)animation;
+                        BrokenAnimator bA = (BrokenAnimator) animation;
                         bA.setInterpolator(new LinearInterpolator());
+                        bA.setRepeatCount(0);
                         bA.setStage(BrokenAnimator.STAGE_FALLING);
                         bA.setFallingDuration();
                         onBrokenFalling(view);
@@ -86,16 +91,16 @@ public class BrokenView extends View {
                     }
                 });
             }
+
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                BrokenAnimator bAnim = (BrokenAnimator)animation;
+                BrokenAnimator bAnim = (BrokenAnimator) animation;
                 animMap.remove(view);
                 animList.remove(bAnim);
-                if(bAnim.getStage() == BrokenAnimator.STAGE_BREAKING) {
+                if (bAnim.getStage() == BrokenAnimator.STAGE_BREAKING) {
                     onBrokenCancelEnd(view);
-                }
-                else if(bAnim.getStage() == BrokenAnimator.STAGE_FALLING)
+                } else if (bAnim.getStage() == BrokenAnimator.STAGE_FALLING)
                     onBrokenFallingEnd(view);
             }
         });
@@ -113,9 +118,9 @@ public class BrokenView extends View {
         return brokenView;
     }
 
-    public void reset(){
+    public void reset() {
         ListIterator<BrokenAnimator> iterator = animList.listIterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             BrokenAnimator bAnim = iterator.next();
             bAnim.removeAllListeners();
             bAnim.cancel();
@@ -133,38 +138,38 @@ public class BrokenView extends View {
         this.enable = enable;
     }
 
-    public void setCallback(BrokenCallback c){
+    public void setCallback(BrokenCallback c) {
         callBack = c;
     }
 
-    protected void onBrokenCancel(View v){
-        if(callBack != null)
+    protected void onBrokenCancel(View v) {
+        if (callBack != null)
             callBack.onCancel(v);
     }
 
-    protected void onBrokenStart(View v){
-        if(callBack != null)
+    protected void onBrokenStart(View v) {
+        if (callBack != null)
             callBack.onStart(v);
     }
 
-    protected void onBrokenCancelEnd(View v){
-        if(callBack != null)
+    protected void onBrokenCancelEnd(View v) {
+        if (callBack != null)
             callBack.onCancelEnd(v);
     }
 
-    protected void onBrokenFallingEnd(View v){
-        if(callBack != null)
+    protected void onBrokenFallingEnd(View v) {
+        if (callBack != null)
             callBack.onFallingEnd(v);
     }
 
-    protected void onBrokenRestart(View v){
-        if(callBack != null)
+    protected void onBrokenRestart(View v) {
+        if (callBack != null)
             callBack.onRestart(v);
     }
 
-    protected void onBrokenFalling(View v){
+    protected void onBrokenFalling(View v) {
         v.setVisibility(View.INVISIBLE);
-        if(callBack != null){
+        if (callBack != null) {
             callBack.onFalling(v);
         }
     }

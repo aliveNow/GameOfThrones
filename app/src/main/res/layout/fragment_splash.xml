@@ -6,16 +6,22 @@
     tools:context=".ui.splash.SplashFragment">
 
     <ImageView
+        android:id="@+id/imgSecond"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/stark_coast_of_arms" />
+
+    <ImageView
         android:id="@+id/imgFirst"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/spash"
-        />
+        android:scaleType="fitXY"
+        android:src="@drawable/spash" />
 
     <com.zys.brokenview.BrokenView
         android:id="@+id/brokenView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 </FrameLayout>

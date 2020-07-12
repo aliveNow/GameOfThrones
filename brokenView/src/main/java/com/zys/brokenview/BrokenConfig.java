@@ -9,8 +9,8 @@ public class BrokenConfig {
     int breakDuration = 700;
     int fallDuration = 2000;
     int circleRiftsRadius = 66;
-    int maxWidth = 0;
-    int maxHeight = 0;
+    int maxWidth;
+    int maxHeight;
     Region region = null;
     View childView = null;
     Paint paint = null;
@@ -19,6 +19,5 @@ public class BrokenConfig {
         this.maxWidth = maxWidth;
         this.maxHeight = maxHeight;
     }
-
 
 }
