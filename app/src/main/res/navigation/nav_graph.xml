@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/splashFragment"
         android:name="ru.skillbranch.gameofthrones.ui.splash.SplashFragment"
-        tools:layout="@layout/splash_fragment">
+        tools:layout="@layout/fragment_splash">
 
         <action
             android:id="@+id/actionFromSplashFragmentToMainFragment"
@@ -21,6 +21,6 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="ru.skillbranch.gameofthrones.ui.main.MainFragment"
-        tools:layout="@layout/main_fragment" />
+        tools:layout="@layout/fragment_main" />
 
 </navigation>

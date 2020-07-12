@@ -19,7 +19,7 @@ class CharactersListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.characters_list_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_characters_list, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
