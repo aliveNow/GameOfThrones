@@ -4,30 +4,41 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import ru.skillbranch.gameofthrones.R
+import ru.skillbranch.gameofthrones.databinding.FragmentCharactersListBinding
 
 class CharactersListFragment : Fragment() {
 
     private lateinit var viewModel: CharactersListViewModel
+    private lateinit var vb: FragmentCharactersListBinding
+    private val adapter: CharactersListAdapter
+        get() = vb.rvList.adapter as CharactersListAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_characters_list, container, false)
+        return FragmentCharactersListBinding.inflate(inflater, container, false)
+            .also { vb = it }
+            .root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        vb.rvList.adapter = CharactersListAdapter()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(CharactersListViewModel::class.java)
         viewModel.houseName = checkNotNull(arguments?.getString(ARG_CHARACTERS_LIST_HOUSE_NAME))
-        viewModel.names.observe(viewLifecycleOwner, Observer {
-            view?.findViewById<TextView>(R.id.tvTest)?.text = it.joinToString(separator = "\n")
+        viewModel.itemsList.observe(viewLifecycleOwner, Observer {
+            adapter.items = it
+            adapter.notifyDataSetChanged()
         })
     }
 

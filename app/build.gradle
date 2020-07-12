@@ -16,6 +16,10 @@ android {
         jvmTarget = "1.8"
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
     defaultConfig {
         applicationId "ru.skillbranch.gameofthrones"
         minSdkVersion 23
