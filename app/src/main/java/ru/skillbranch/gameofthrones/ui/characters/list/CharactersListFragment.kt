@@ -1,28 +1,25 @@
 package ru.skillbranch.gameofthrones.ui.characters.list
 
 import android.os.Bundle
-import android.view.*
-import androidx.appcompat.widget.SearchView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import ru.skillbranch.gameofthrones.R
+import org.koin.android.ext.android.getKoin
+import org.koin.android.viewmodel.koin.getViewModel
+import org.koin.core.parameter.parametersOf
 import ru.skillbranch.gameofthrones.databinding.FragmentCharactersListBinding
 import ru.skillbranch.gameofthrones.ui.main.MainFragmentDirections
 
-class CharactersListFragment : Fragment(), SearchView.OnQueryTextListener {
+class CharactersListFragment : Fragment() {
 
     private lateinit var viewModel: CharactersListViewModel
     private lateinit var vb: FragmentCharactersListBinding
     private val adapter: CharactersListAdapter
         get() = vb.rvList.adapter as CharactersListAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,27 +45,18 @@ class CharactersListFragment : Fragment(), SearchView.OnQueryTextListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(CharactersListViewModel::class.java)
-        viewModel.houseName = checkNotNull(arguments?.getString(ARG_CHARACTERS_LIST_HOUSE_NAME))
+        val houseName = checkNotNull(arguments?.getString(ARG_CHARACTERS_LIST_HOUSE_NAME))
+        viewModel = getKoin().getViewModel(
+            this,
+            clazz = CharactersListViewModel::class//,
+            //qualifier = named(houseName)
+        ) {
+            parametersOf(houseName)
+        }
         viewModel.itemsList.observe(viewLifecycleOwner, Observer {
             adapter.items = it
             adapter.notifyDataSetChanged()
         })
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        requireActivity().menuInflater.inflate(R.menu.menu_characters_list, menu)
-        val searchItem = menu.findItem(R.id.search)
-        (searchItem.actionView as? SearchView)?.setOnQueryTextListener(this)
-    }
-
-    override fun onQueryTextSubmit(query: String?): Boolean {
-        return true
-    }
-
-    override fun onQueryTextChange(newText: String?): Boolean {
-        viewModel.searchStringChanged(newText)
-        return true
     }
 
     companion object {

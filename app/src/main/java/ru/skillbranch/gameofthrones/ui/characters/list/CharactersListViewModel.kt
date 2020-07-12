@@ -5,15 +5,12 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
 import ru.skillbranch.gameofthrones.data.local.entities.CharacterItem
 import ru.skillbranch.gameofthrones.repositories.RootRepository
+import ru.skillbranch.gameofthrones.ui.characters.CharactersInteractor
 
-class CharactersListViewModel() : ViewModel() {
-
-    //FIXME: ! to constructor !
-    var houseName: String = ""
-        set(value) {
-            field = value
-            loadCharacters()
-        }
+class CharactersListViewModel(
+    private val interactor: CharactersInteractor,
+    private val houseName: String
+) : ViewModel(), CharactersInteractor.OnSearchStringChangeListener {
 
     val itemsList = MutableLiveData<List<CharacterItem>>()
     private val viewModelJob = SupervisorJob()
@@ -22,26 +19,23 @@ class CharactersListViewModel() : ViewModel() {
     private var lastSearchString: String? = null
     private var searchJob: Job? = null
 
+    init {
+        interactor.addOnSearchStringChangeListener(this)
+        lastSearchString = interactor.searchString
+        loadCharacters()
+    }
+
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+        interactor.removeOnSearchStringChangeListener(this)
     }
 
-    fun searchStringChanged(searchString: String?) {
+    override fun onSearchStringChanged(searchString: String?) {
         if (searchString != lastSearchString) {
             lastSearchString = searchString
-            searchJob?.cancel()
-            searchJob = uiScope.launch {
-                delay(300)
-                itemsList.value = if (searchString.isNullOrEmpty()) {
-                    sourceItems
-                } else {
-                    withContext(Dispatchers.IO) {
-                        sourceItems.filter {
-                            it.name.contains(searchString, ignoreCase = true)
-                        }
-                    }
-                }
+            if (sourceItems.isNotEmpty()) {
+                filterCharacters(searchString)
             }
         }
     }
@@ -55,7 +49,23 @@ class CharactersListViewModel() : ViewModel() {
             sourceItems = withContext(Dispatchers.IO) {
                 RootRepository.findCharactersByHouseName(houseName)
             }
-            itemsList.value = sourceItems
+            filterCharacters(lastSearchString)
+        }
+    }
+
+    private fun filterCharacters(searchString: String?) {
+        searchJob?.cancel()
+        searchJob = uiScope.launch {
+            delay(300)
+            itemsList.value = if (searchString.isNullOrEmpty()) {
+                sourceItems
+            } else {
+                withContext(Dispatchers.IO) {
+                    sourceItems.filter {
+                        it.name.contains(searchString, ignoreCase = true)
+                    }
+                }
+            }
         }
     }
 
