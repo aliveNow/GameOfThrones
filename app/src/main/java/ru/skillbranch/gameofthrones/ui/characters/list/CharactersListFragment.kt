@@ -8,7 +8,9 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import ru.skillbranch.gameofthrones.databinding.FragmentCharactersListBinding
+import ru.skillbranch.gameofthrones.ui.main.MainFragmentDirections
 
 class CharactersListFragment : Fragment() {
 
@@ -29,7 +31,14 @@ class CharactersListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vb.rvList.adapter = CharactersListAdapter()
+        vb.rvList.adapter = CharactersListAdapter().apply {
+            onItemClickListener = {
+                findNavController().navigate(
+                    //FIXME: from there it's bad -_-
+                    MainFragmentDirections.actionFromCharactersListFragmentToDetailFragment(it.id)
+                )
+            }
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

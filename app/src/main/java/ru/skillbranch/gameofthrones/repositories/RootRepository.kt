@@ -50,14 +50,17 @@ object RootRepository {
             }
         val houses = mutableListOf<HouseRes>()
         val characters = mutableListOf<CharacterRes>()
-        housesWithCharacters.forEach {
-            val houseId = it.first.name
-            houses.add(it.first)
-            it.second.forEach { character ->
-                character.houseId = houseId
+        housesWithCharacters.forEach { (house, houseCharacters) ->
+            val houseId = house.name
+            houses.add(house)
+            houseCharacters.forEach { it.houseId = houseId }
+            //TODO: remove it
+            val firstChar = houseCharacters.first()
+            val testCharacters = houseCharacters.map { character ->
+                character.copy(father = firstChar.url.takeIf { character.url != it } ?: "")
             }
-            //FIXME: character can be loyal only to one house?
-            characters.addAll(it.second)
+            //supposing that character can be loyal only to one house...
+            characters.addAll(testCharacters)
         }
         suspendCoroutine { continuation: Continuation<Unit> ->
             insertHouses(houses) {
@@ -74,6 +77,17 @@ object RootRepository {
     suspend fun findCharactersByHouseName(name: String): List<CharacterItem> =
         suspendCoroutine { continuation: Continuation<List<CharacterItem>> ->
             findCharactersByHouseName(name) {
+                continuation.resumeWith(Result.success(it))
+            }
+        }
+
+    //TODO: remove
+    suspend fun findCharactersByHouseName2(name: String): List<Character> =
+        db.getCharacterDao().getCharactersByHouseName2(name)
+
+    suspend fun findCharacterFullById(id: String): CharacterFull =
+        suspendCoroutine { continuation: Continuation<CharacterFull> ->
+            findCharacterFullById(id) {
                 continuation.resumeWith(Result.success(it))
             }
         }
@@ -231,7 +245,7 @@ object RootRepository {
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun findCharacterFullById(id: String, result: (character: CharacterFull) -> Unit) {
-        //TODO implement me
+        result(db.getCharacterDao().getCharacterFullById(id))
     }
 
     /**

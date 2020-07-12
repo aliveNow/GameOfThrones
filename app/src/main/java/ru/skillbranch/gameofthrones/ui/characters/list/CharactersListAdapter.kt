@@ -9,6 +9,7 @@ import ru.skillbranch.gameofthrones.databinding.ItemCharacterBinding
 class CharactersListAdapter : RecyclerView.Adapter<CharactersListAdapter.ViewHolder>() {
 
     var items: List<CharacterItem> = emptyList()
+    var onItemClickListener: ((CharacterItem) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ItemCharacterBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -17,7 +18,9 @@ class CharactersListAdapter : RecyclerView.Adapter<CharactersListAdapter.ViewHol
     override fun getItemCount(): Int = items.count()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position])
+        val item = items[position]
+        holder.bind(item)
+        holder.itemView.setOnClickListener { onItemClickListener?.invoke(item) }
     }
 
     class ViewHolder(private val vb: ItemCharacterBinding) : RecyclerView.ViewHolder(vb.root) {

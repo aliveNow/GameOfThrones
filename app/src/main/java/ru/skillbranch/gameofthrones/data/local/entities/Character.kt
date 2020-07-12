@@ -5,6 +5,7 @@ import androidx.room.ForeignKey.CASCADE
 
 @Entity(
     tableName = "character",
+    indices = [Index("houseId"), Index("father"), Index("mother")],
     foreignKeys = [
         ForeignKey(
             entity = House::class,
@@ -43,8 +44,8 @@ data class CharacterFull(
     val name: String,
     @Relation(
         entity = House::class,
-        parentColumn = "id",
-        entityColumn = "houseId",
+        parentColumn = "houseId",
+        entityColumn = "name",
         projection = ["words"]
     )
     val words: String,
@@ -52,18 +53,20 @@ data class CharacterFull(
     val died: String,
     val titles: List<String>,
     val aliases: List<String>,
-    val house: String, //rel
+    @ColumnInfo(name = "houseId") val house: String, //rel
+    @ColumnInfo(name = "father") val fatherId: String, //TODO: is there a way to make it simpler?
+    @ColumnInfo(name = "mother") val motherId: String,
     @Relation(
         entity = Character::class,
-        parentColumn = "id",
-        entityColumn = "father",
+        parentColumn = "father",
+        entityColumn = "id",
         projection = ["id", "name", "houseId"]
     )
     val father: RelativeCharacter?,
     @Relation(
         entity = Character::class,
-        parentColumn = "id",
-        entityColumn = "father",
+        parentColumn = "mother",
+        entityColumn = "id",
         projection = ["id", "name", "houseId"]
     )
     val mother: RelativeCharacter?
@@ -72,5 +75,5 @@ data class CharacterFull(
 data class RelativeCharacter(
     val id: String,
     val name: String,
-    val house: String //rel
+    @ColumnInfo(name = "houseId") val house: String //rel
 )

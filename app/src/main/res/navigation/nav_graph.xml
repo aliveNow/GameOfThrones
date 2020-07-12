@@ -21,6 +21,23 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="ru.skillbranch.gameofthrones.ui.main.MainFragment"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main">
+
+        <action
+            android:id="@+id/actionFromCharactersListFragmentToDetailFragment"
+            app:destination="@id/characterFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/characterFragment"
+        android:name="ru.skillbranch.gameofthrones.ui.characters.details.CharacterFragment"
+        tools:layout="@layout/fragment_character">
+
+        <argument
+            android:name="characterId"
+            app:argType="string" />
+
+    </fragment>
 
 </navigation>
