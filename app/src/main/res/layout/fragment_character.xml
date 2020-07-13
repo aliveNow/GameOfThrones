@@ -23,10 +23,11 @@
             app:toolbarId="@+id/toolbar">
 
             <ImageView
+                android:id="@+id/imgCoastOfArms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@drawable/stark_coast_of_arms" />
+                tools:src="@drawable/stark_coast_of_arms" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -42,11 +43,48 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="BIG TEXT" />
+            android:orientation="vertical">
+
+            <ru.skillbranch.gameofthrones.utils.views.CharacterTraitView
+                android:id="@+id/ctwWords"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:traitTitle="@string/character_words" />
+
+            <ru.skillbranch.gameofthrones.utils.views.CharacterTraitView
+                android:id="@+id/ctwBorn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:traitTitle="@string/character_born" />
+
+            <ru.skillbranch.gameofthrones.utils.views.CharacterTraitView
+                android:id="@+id/ctwTitles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:traitTitle="@string/character_titles" />
+
+            <ru.skillbranch.gameofthrones.utils.views.CharacterTraitView
+                android:id="@+id/ctwAliases"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:traitTitle="@string/character_aliases" />
+
+            <ru.skillbranch.gameofthrones.utils.views.ButtonCharacterTraitView
+                android:id="@+id/bctFather"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:traitTitle="@string/character_father" />
+
+            <ru.skillbranch.gameofthrones.utils.views.ButtonCharacterTraitView
+                android:id="@+id/bctMother"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:traitTitle="@string/character_mother" />
+
+        </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

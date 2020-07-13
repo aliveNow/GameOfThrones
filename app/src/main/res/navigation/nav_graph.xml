@@ -35,6 +35,10 @@
         tools:layout="@layout/fragment_character">
 
         <argument
+            android:name="shortHouseName"
+            app:argType="string" />
+
+        <argument
             android:name="characterId"
             app:argType="string" />
 

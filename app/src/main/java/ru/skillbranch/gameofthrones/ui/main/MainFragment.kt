@@ -11,6 +11,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import org.koin.android.ext.android.getKoin
 import org.koin.android.viewmodel.koin.getViewModel
 import ru.skillbranch.gameofthrones.AppConfig
+import ru.skillbranch.gameofthrones.HouseType
 import ru.skillbranch.gameofthrones.R
 import ru.skillbranch.gameofthrones.databinding.FragmentMainBinding
 import ru.skillbranch.gameofthrones.ui.characters.list.CharactersListFragment
@@ -39,7 +40,7 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
         (requireActivity() as AppCompatActivity).setSupportActionBar(vb.toolbar)
         vb.viewPager.adapter = ViewPagerFragmentStateAdapter(requireActivity())
         TabLayoutMediator(vb.tabs, vb.viewPager) { tab, position ->
-            tab.text = AppConfig.NEED_HOUSES[position] //FIXME: to VM
+            tab.text = HouseType.values()[position].shortName //FIXME: to VM
         }.attach()
     }
 
@@ -86,10 +87,10 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
         FragmentStateAdapter(activity) {
 
         override fun createFragment(position: Int): Fragment =
-            CharactersListFragment.newInstance(AppConfig.NEED_HOUSES[position])
+            CharactersListFragment.newInstance(HouseType.values()[position].shortName)
 
         //FIXME: to VM
-        override fun getItemCount(): Int = AppConfig.NEED_HOUSES.size
+        override fun getItemCount(): Int = HouseType.values().size
 
     }
 

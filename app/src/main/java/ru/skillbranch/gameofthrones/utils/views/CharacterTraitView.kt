@@ -14,7 +14,7 @@ open class CharacterTraitView(context: Context, attrs: AttributeSet) : FrameLayo
     open var value: String? = null
         set(value) {
             field = value
-            findViewById<TextView>(R.id.tvText).text = value
+            findViewById<TextView>(R.id.tvValue).text = value
         }
 
     private val tvTitle: TextView

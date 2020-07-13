@@ -2,5 +2,12 @@
     <string name="app_name">Game Of Thrones</string>
 
     <string name="characters_list_search_hint">Search character</string>
+    
+    <string name="character_words">Words:</string>
+    <string name="character_born">Born:</string>
+    <string name="character_titles">Titles:</string>
+    <string name="character_aliases">Aliases:</string>
+    <string name="character_father">Father:</string>
+    <string name="character_mother">Mother:</string>
 
 </resources>

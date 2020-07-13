@@ -3,15 +3,17 @@ package ru.skillbranch.gameofthrones.ui.characters.list
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
+import ru.skillbranch.gameofthrones.HouseType
 import ru.skillbranch.gameofthrones.data.local.entities.CharacterItem
 import ru.skillbranch.gameofthrones.repositories.RootRepository
 import ru.skillbranch.gameofthrones.ui.characters.CharactersInteractor
 
 class CharactersListViewModel(
     private val interactor: CharactersInteractor,
-    private val houseName: String
+    shortHouseName: String
 ) : ViewModel(), CharactersInteractor.OnSearchStringChangeListener {
 
+    val houseType = checkNotNull(HouseType.findByShortName(shortHouseName))
     val itemsList = MutableLiveData<List<CharacterItem>>()
     private val viewModelJob = SupervisorJob()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -44,10 +46,10 @@ class CharactersListViewModel(
         uiScope.launch {
             //TODO: remove
             val fullChars = withContext(Dispatchers.IO) {
-                RootRepository.findCharactersByHouseName2(houseName)
+                RootRepository.findCharactersByHouseName2(houseType.fullName)
             }
             sourceItems = withContext(Dispatchers.IO) {
-                RootRepository.findCharactersByHouseName(houseName)
+                RootRepository.findCharactersByHouseName(houseType.fullName)
             }
             filterCharacters(lastSearchString)
         }

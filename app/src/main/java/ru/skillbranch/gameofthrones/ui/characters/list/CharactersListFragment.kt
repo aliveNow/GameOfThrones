@@ -37,7 +37,10 @@ class CharactersListFragment : Fragment() {
             onItemClickListener = {
                 findNavController().navigate(
                     //FIXME: from there it's bad -_-
-                    MainFragmentDirections.actionFromCharactersListFragmentToDetailFragment(it.id)
+                    MainFragmentDirections.actionFromCharactersListFragmentToDetailFragment(
+                        shortHouseName = viewModel.houseType.shortName,
+                        characterId = it.id
+                    )
                 )
             }
         }

@@ -15,7 +15,7 @@ object AppConfig {
 }
 
 //FIXME: temporary, remake to styles
-enum class NobleHouse(
+enum class HouseType(
     val fullName: String,
     val shortName: String,
     val colorAccentId: Int,
@@ -89,7 +89,7 @@ enum class NobleHouse(
     );
 
     companion object {
-        fun findByShortName(name: String): NobleHouse? =
+        fun findByShortName(name: String): HouseType? =
             values().firstOrNull { it.shortName == name }
     }
 }
