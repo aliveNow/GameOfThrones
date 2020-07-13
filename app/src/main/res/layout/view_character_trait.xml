@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:parentTag="android.widget.FrameLayout">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/character_trait_margin_start"
+        android:paddingTop="@dimen/character_trait_margin_top"
+        android:paddingEnd="@dimen/character_trait_margin_end"
+        android:paddingBottom="@dimen/character_trait_margin_bottom">
+
+        <ImageView
+            android:layout_width="@dimen/icon_size_medium"
+            android:layout_height="@dimen/icon_size_medium"
+            android:src="@drawable/ic_icon_decor"
+            android:tint="@color/color_accent" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="@dimen/character_trait_title_width"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/character_trait_title_margin_start"
+            android:layout_marginEnd="@dimen/character_trait_title_margin_end"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            tools:text="Aliases:" />
+
+        <TextView
+            android:id="@+id/tvText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            tools:text="An API of Ice And Fire provides a lot of data about the world of Westeros. To prevent our servers from getting cranky, the API will automatically paginate the responses. You will learn how to create requests with pagination parameters and consume the response." />
+
+    </LinearLayout>
+</merge>

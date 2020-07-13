@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="icon_size_medium">24dp</dimen>
+
+    <dimen name="character_trait_margin_top">4dp</dimen>
+    <dimen name="character_trait_margin_bottom">4dp</dimen>
+    <dimen name="character_trait_margin_start">16dp</dimen>
+    <dimen name="character_trait_margin_end">6dp</dimen>
+    <dimen name="character_trait_title_width">100dp</dimen>
+    <dimen name="character_trait_title_margin_start">4dp</dimen>
+    <dimen name="character_trait_title_margin_end">6dp</dimen>
+
+</resources>
