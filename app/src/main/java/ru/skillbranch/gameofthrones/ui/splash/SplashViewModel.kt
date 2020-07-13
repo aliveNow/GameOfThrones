@@ -28,7 +28,7 @@ class SplashViewModel : ViewModel() {
             }
             showAnimation.value = true
             withContext(Dispatchers.IO) {
-                delay(17000) //FIXME: !!!
+                delay(3000) //FIXME: !!!
                 with(RootRepository) {
                     val isNeedUpdate = isNeedUpdate()
                     if (isNeedUpdate) {

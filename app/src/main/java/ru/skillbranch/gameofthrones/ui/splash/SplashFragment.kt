@@ -61,6 +61,7 @@ class SplashFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
         viewModel.navigateToMain.observe(viewLifecycleOwner, Observer {
+            vb.brokenView.reset()
             findNavController().navigate(R.id.actionFromSplashFragmentToMainFragment)
         })
         viewModel.showAnimation.observe(viewLifecycleOwner, Observer {

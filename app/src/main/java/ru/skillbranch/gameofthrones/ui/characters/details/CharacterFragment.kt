@@ -30,7 +30,7 @@ class CharacterFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(CharacterViewModel::class.java)
         viewModel.characterId = args.characterId
         viewModel.otherCharacter.observe(viewLifecycleOwner, Observer {
-            vb.tvOtherCharacter.text = it.name
+            //vb.tvOtherCharacter.text = it.name
         })
     }
 
