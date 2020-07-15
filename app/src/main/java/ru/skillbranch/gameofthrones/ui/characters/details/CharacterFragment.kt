@@ -12,6 +12,7 @@ import org.koin.android.ext.android.getKoin
 import org.koin.android.viewmodel.koin.getViewModel
 import org.koin.core.parameter.parametersOf
 import ru.skillbranch.gameofthrones.databinding.FragmentCharacterBinding
+import ru.skillbranch.gameofthrones.utils.ui.setDisplayHomeAsUpEnabled
 
 class CharacterFragment : Fragment() {
 
@@ -31,7 +32,7 @@ class CharacterFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (requireActivity() as AppCompatActivity).setSupportActionBar(vb.toolbar)
-
+        setDisplayHomeAsUpEnabled(true)
         viewModel = getKoin().getViewModel(
             this,
             clazz = CharacterViewModel::class

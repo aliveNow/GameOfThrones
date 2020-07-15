@@ -13,7 +13,8 @@
         <action
             android:id="@+id/actionFromSplashFragmentToMainFragment"
             app:destination="@id/mainFragment"
-            app:popUpTo="@id/splashFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
 
     </fragment>

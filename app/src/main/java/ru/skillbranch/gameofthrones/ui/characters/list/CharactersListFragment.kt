@@ -13,6 +13,7 @@ import org.koin.android.viewmodel.koin.getViewModel
 import org.koin.core.parameter.parametersOf
 import ru.skillbranch.gameofthrones.databinding.FragmentCharactersListBinding
 import ru.skillbranch.gameofthrones.ui.main.MainFragmentDirections
+import ru.skillbranch.gameofthrones.utils.ui.setDisplayHomeAsUpEnabled
 
 class CharactersListFragment : Fragment() {
 

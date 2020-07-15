@@ -2,6 +2,7 @@ package ru.skillbranch.gameofthrones.ui.main
 
 import android.os.Bundle
 import android.view.*
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -17,6 +18,8 @@ import ru.skillbranch.gameofthrones.HouseType
 import ru.skillbranch.gameofthrones.R
 import ru.skillbranch.gameofthrones.databinding.FragmentMainBinding
 import ru.skillbranch.gameofthrones.ui.characters.list.CharactersListFragment
+import ru.skillbranch.gameofthrones.utils.ui.hideSoftInput
+import ru.skillbranch.gameofthrones.utils.ui.setDisplayHomeAsUpEnabled
 import ru.skillbranch.gameofthrones.utils.views.ColoredTabsAppBar
 
 class MainFragment : Fragment(), SearchView.OnQueryTextListener {
@@ -29,6 +32,14 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
 
     val tabLayout: TabLayout
         get() = vb.tabsAppBar.tabLayout
+
+    private var menuSearchView: SearchView? = null
+
+    private val onSearchBackPressedCallback = object : OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() {
+            menuSearchView?.isIconified = true
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,7 +108,14 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setDisplayHomeAsUpEnabled(false)
         viewModel = getKoin().getViewModel(this, clazz = MainViewModel::class)
+        requireActivity().onBackPressedDispatcher.addCallback(onSearchBackPressedCallback)
+    }
+
+    override fun onDestroy() {
+        menuSearchView = null
+        super.onDestroy()
     }
 
     override fun onResume() {
@@ -113,28 +131,30 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_characters_list, menu)
         val searchItem = menu.findItem(R.id.search)
+
         (searchItem.actionView as? SearchView)?.apply {
+            menuSearchView = this
+            setIconifiedByDefault(true)
             setOnQueryTextListener(this@MainFragment)
             queryHint = getString(R.string.characters_list_search_hint)
             viewModel.lastSearchString?.let {
                 isIconified = false
-                (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(
-                    true
-                )
+                onSearchViewIsVisible(true)
                 setQuery(it, false)
             }
             setOnSearchClickListener {
-                (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(
-                    true
-                )
+                onSearchViewIsVisible(true)
             }
             setOnCloseListener {
-                (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(
-                    false
-                )
+                onSearchViewIsVisible(false)
                 false
             }
         }
+    }
+
+    private fun onSearchViewIsVisible(isVisible: Boolean) {
+        setDisplayHomeAsUpEnabled(isVisible)
+        onSearchBackPressedCallback.isEnabled = isVisible
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
