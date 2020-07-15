@@ -1,60 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <View
-        android:id="@+id/backgroundView"
+    <ru.skillbranch.gameofthrones.utils.views.ColoredTabsAppBar
+        android:id="@+id/tabsAppBar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="?colorPrimary"
-        app:layout_constraintBottom_toTopOf="@+id/viewPager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:id="@+id/revealView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/viewPager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/transparent"
-            app:layout_scrollFlags="scroll|enterAlways" />
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabBackground="@android:color/transparent"
-            app:tabGravity="fill"
-            app:tabMode="scrollable" />
-
-    </com.google.android.material.appbar.AppBarLayout>
+        android:layout_height="wrap_content"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
+        android:layout_weight="1" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
