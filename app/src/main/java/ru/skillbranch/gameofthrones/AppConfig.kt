@@ -12,6 +12,7 @@ object AppConfig {
         "House Nymeros Martell of Sunspear" */
     )
     const val BASE_URL = "https://www.anapioficeandfire.com/"
+    var appThemeId: Int = R.style.AppThemeOverlay_Lannister
 }
 
 //FIXME: temporary, remake to styles
@@ -22,7 +23,8 @@ enum class HouseType(
     val colorPrimaryId: Int,
     val colorDarkId: Int,
     val coatOfArmsId: Int,
-    val iconId: Int
+    val iconId: Int,
+    val themeId: Int
 ) {
     STARK(
         fullName = "House Stark of Winterfell",
@@ -31,7 +33,8 @@ enum class HouseType(
         colorPrimaryId = R.color.stark_primary,
         colorDarkId = R.color.stark_dark,
         coatOfArmsId = R.drawable.stark_coast_of_arms,
-        iconId = R.drawable.stark_icon
+        iconId = R.drawable.stark_icon,
+        themeId = R.style.AppThemeOverlay_Stark
     ),
     LANNISTER(
         fullName = "House Lannister of Casterly Rock",
@@ -40,7 +43,8 @@ enum class HouseType(
         colorPrimaryId = R.color.lannister_primary,
         colorDarkId = R.color.lannister_dark,
         coatOfArmsId = R.drawable.lannister__coast_of_arms,
-        iconId = R.drawable.lanister_icon
+        iconId = R.drawable.lanister_icon,
+        themeId = R.style.AppThemeOverlay_Lannister
     ),
     TARGARYEN(
         fullName = "House Targaryen of King's Landing",
@@ -49,7 +53,8 @@ enum class HouseType(
         colorPrimaryId = R.color.targaryen_primary,
         colorDarkId = R.color.targaryen_dark,
         coatOfArmsId = R.drawable.targaryen_coast_of_arms,
-        iconId = R.drawable.targaryen_icon
+        iconId = R.drawable.targaryen_icon,
+        themeId = R.style.AppThemeOverlay_Targaryen
     ),
     GREYJOY(
         fullName = "House Greyjoy of Pyke",
@@ -58,7 +63,8 @@ enum class HouseType(
         colorPrimaryId = R.color.greyjoy_primary,
         colorDarkId = R.color.greyjoy_dark,
         coatOfArmsId = R.drawable.greyjoy_coast_of_arms,
-        iconId = R.drawable.greyjoy_icon
+        iconId = R.drawable.greyjoy_icon,
+        themeId = R.style.AppThemeOverlay_Greyjoy
     ),
     TYRELL(
         fullName = "House Tyrell of Highgarden",
@@ -67,7 +73,8 @@ enum class HouseType(
         colorPrimaryId = R.color.tyrel_primary,
         colorDarkId = R.color.tyrel_dark,
         coatOfArmsId = R.drawable.tyrel_coast_of_arms,
-        iconId = R.drawable.tyrel_icon
+        iconId = R.drawable.tyrel_icon,
+        themeId = R.style.AppThemeOverlay_Tyrel
     ),
     BARATHEON(
         fullName = "House Baratheon of Dragonstone",
@@ -76,7 +83,8 @@ enum class HouseType(
         colorPrimaryId = R.color.baratheon_primary,
         colorDarkId = R.color.baratheon_dark,
         coatOfArmsId = R.drawable.baratheon_coast_of_arms,
-        iconId = R.drawable.baratheon_icon
+        iconId = R.drawable.baratheon_icon,
+        themeId = R.style.AppThemeOverlay_Baratheon
     ),
     MARTELL(
         fullName = "House Nymeros Martell of Sunspear",
@@ -85,7 +93,8 @@ enum class HouseType(
         colorPrimaryId = R.color.martel_primary,
         colorDarkId = R.color.martel_dark,
         coatOfArmsId = R.drawable.martel_coast_of_arms,
-        iconId = R.drawable.martel_icon
+        iconId = R.drawable.martel_icon,
+        themeId = R.style.AppThemeOverlay_Martel
     );
 
     companion object {

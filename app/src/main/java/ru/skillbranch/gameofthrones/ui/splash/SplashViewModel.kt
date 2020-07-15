@@ -24,11 +24,11 @@ class SplashViewModel : ViewModel() {
     private fun loadData() {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                delay(1000)
+                delay(500)
             }
             showAnimation.value = true
             withContext(Dispatchers.IO) {
-                delay(3000) //FIXME: !!!
+                delay(1000) //FIXME: !!!
                 with(RootRepository) {
                     val isNeedUpdate = isNeedUpdate()
                     if (isNeedUpdate) {

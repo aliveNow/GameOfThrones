@@ -1,5 +1,6 @@
 package ru.skillbranch.gameofthrones.ui.main
 
+import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import ru.skillbranch.gameofthrones.ui.characters.CharactersInteractor
 

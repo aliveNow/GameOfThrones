@@ -31,6 +31,7 @@ class CharacterFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         (requireActivity() as AppCompatActivity).setSupportActionBar(vb.toolbar)
+
         viewModel = getKoin().getViewModel(
             this,
             clazz = CharacterViewModel::class
