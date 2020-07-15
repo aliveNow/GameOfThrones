@@ -9,6 +9,8 @@ class SplashViewModel : ViewModel() {
 
     val showAnimation = MutableLiveData<Boolean>()
     val navigateToMain = MutableLiveData<Boolean>() //FIXME: eventLiveData
+    var needToNavigateToMain: Boolean = false
+        private set
     private val viewModelJob = SupervisorJob()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
@@ -28,7 +30,7 @@ class SplashViewModel : ViewModel() {
             }
             showAnimation.value = true
             withContext(Dispatchers.IO) {
-                delay(1000) //FIXME: !!!
+                delay(2000) //FIXME: !!!
                 with(RootRepository) {
                     val isNeedUpdate = isNeedUpdate()
                     if (isNeedUpdate) {
@@ -37,6 +39,7 @@ class SplashViewModel : ViewModel() {
                 }
             }
             navigateToMain.value = true
+            needToNavigateToMain = true
         }
     }
 }

@@ -42,17 +42,7 @@ class SplashFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         vb.brokenView.setCallback(object : BrokenCallback() {
             override fun onFallingEnd(v: View?) {
-                imagePosition = when (imagePosition) {
-                    imageIds.size - 1 -> 0
-                    else -> imagePosition + 1
-                }
-                firstImageId = secondImageId
-                secondImageId = imageIds[imagePosition]
-                vb.imgFirst.setImageDrawable(requireContext().getDrawable(firstImageId))
-                vb.imgSecond.setImageDrawable(requireContext().getDrawable(secondImageId))
-                vb.imgFirst.visibility = View.VISIBLE
-                vb.brokenView.reset()
-                vb.brokenView.createAnimator(vb.imgFirst).start()
+                onAnimationEnd()
             }
         })
     }
@@ -61,8 +51,7 @@ class SplashFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
         viewModel.navigateToMain.observe(viewLifecycleOwner, Observer {
-            vb.brokenView.reset()
-            findNavController().navigate(SplashFragmentDirections.actionFromSplashFragmentToMainFragment())
+
         })
         viewModel.showAnimation.observe(viewLifecycleOwner, Observer {
             vb.brokenView.createAnimator(vb.imgFirst)
@@ -73,6 +62,26 @@ class SplashFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+    }
+
+    private fun onAnimationEnd() {
+        imagePosition = when (imagePosition) {
+            imageIds.size - 1 -> 0
+            else -> imagePosition + 1
+        }
+        firstImageId = secondImageId
+        secondImageId = imageIds[imagePosition]
+        vb.imgFirst.setImageDrawable(requireContext().getDrawable(firstImageId))
+        vb.imgSecond.setImageDrawable(requireContext().getDrawable(secondImageId))
+        vb.imgFirst.visibility = View.VISIBLE
+        vb.brokenView.reset()
+        if (viewModel.needToNavigateToMain) {
+            findNavController().navigate(
+                SplashFragmentDirections.actionFromSplashFragmentToMainFragment(splashImageId = firstImageId)
+            )
+        } else {
+            vb.brokenView.createAnimator(vb.imgFirst).start()
+        }
     }
 
 }

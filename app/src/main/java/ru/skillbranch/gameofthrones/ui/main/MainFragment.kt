@@ -8,10 +8,13 @@ import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.zys.brokenview.BrokenCallback
 import org.koin.android.ext.android.getKoin
 import org.koin.android.viewmodel.koin.getViewModel
 import ru.skillbranch.gameofthrones.HouseType
@@ -26,6 +29,7 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var vb: FragmentMainBinding
+    private val args by navArgs<MainFragmentArgs>()
 
     val toolbar: Toolbar
         get() = vb.tabsAppBar.toolbar
@@ -58,7 +62,14 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        vb.imgSplash.setImageDrawable(requireContext().getDrawable(args.splashImageId))
+        vb.brokenView.setCallback(object : BrokenCallback() {
+            override fun onFallingEnd(v: View?) {
+                vb.brokenView.reset()
+                vb.imgSplash.visibility = View.GONE
+                vb.brokenView.visibility = View.GONE
+            }
+        })
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
         vb.viewPager.adapter = ViewPagerFragmentStateAdapter(requireActivity())
         vb.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -111,6 +122,10 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
         setDisplayHomeAsUpEnabled(false)
         viewModel = getKoin().getViewModel(this, clazz = MainViewModel::class)
         requireActivity().onBackPressedDispatcher.addCallback(onSearchBackPressedCallback)
+        viewModel.showAnimation.observe(viewLifecycleOwner, Observer {
+            vb.brokenView.createAnimator(vb.imgSplash)
+                .start()
+        })
     }
 
     override fun onDestroy() {
@@ -118,15 +133,17 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
         super.onDestroy()
     }
 
-    override fun onResume() {
+    /*override fun onResume() {
         super.onResume()
-        /* val listener = object: View.OnAttachStateChangeListener {
+        val listener = object: View.OnAttachStateChangeListener {
              override fun onViewAttachedToWindow(v: View?) {
+                 vb.brokenView.createAnimator(vb.imgSplash)
+                     .start()
              }
              override fun onViewDetachedFromWindow(v: View?) {}
          }
-         vb.mainContainer.addOnAttachStateChangeListener(listener) */
-    }
+         vb.brokenView.addOnAttachStateChangeListener(listener)
+    }*/
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_characters_list, menu)

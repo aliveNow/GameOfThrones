@@ -24,6 +24,10 @@
         android:name="ru.skillbranch.gameofthrones.ui.main.MainFragment"
         tools:layout="@layout/fragment_main">
 
+        <argument
+            android:name="splashImageId"
+            app:argType="integer" />
+
         <action
             android:id="@+id/actionFromCharactersListFragmentToDetailFragment"
             app:destination="@id/characterFragment" />
