@@ -7,6 +7,7 @@ import org.koin.core.context.startKoin
 import ru.skillbranch.gameofthrones.repositories.RootRepository
 import ru.skillbranch.gameofthrones.ui.uiModule
 
+@Suppress("unused")
 class MyApplication : Application() {
 
     override fun onCreate() {

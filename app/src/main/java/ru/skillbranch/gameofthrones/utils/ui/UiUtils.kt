@@ -1,9 +1,7 @@
 package ru.skillbranch.gameofthrones.utils.ui
 
-import android.app.Activity
 import android.view.View
 import android.view.ViewTreeObserver
-import android.view.inputmethod.InputMethodManager
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment

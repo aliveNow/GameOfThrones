@@ -3,7 +3,6 @@ package ru.skillbranch.gameofthrones.data.remote
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
-import retrofit2.http.Url
 import ru.skillbranch.gameofthrones.data.remote.res.CharacterRes
 import ru.skillbranch.gameofthrones.data.remote.res.HouseRes
 
@@ -24,7 +23,7 @@ interface IceAndFireApi {
         @Query("pageSize") pageSize: Int
     ): Call<List<CharacterRes>>
 
-    @GET
-    fun getCharacter(@Url url: String): Call<CharacterRes>
+    /* @GET
+     fun getCharacter(@Url url: String): Call<CharacterRes> */
 
 }

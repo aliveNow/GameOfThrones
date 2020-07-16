@@ -42,8 +42,8 @@ enum class HouseType(
         colorAccentId = R.color.lannister_accent,
         colorPrimaryId = R.color.lannister_primary,
         colorDarkId = R.color.lannister_dark,
-        coatOfArmsId = R.drawable.lannister__coast_of_arms,
-        iconId = R.drawable.lanister_icon,
+        coatOfArmsId = R.drawable.lannister_coast_of_arms,
+        iconId = R.drawable.lannister_icon,
         themeId = R.style.AppTheme_Lannister
     ),
     TARGARYEN(

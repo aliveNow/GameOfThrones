@@ -2,7 +2,6 @@ package ru.skillbranch.gameofthrones.ui
 
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import ru.skillbranch.gameofthrones.AppConfig
 import ru.skillbranch.gameofthrones.HouseType
 import ru.skillbranch.gameofthrones.ui.characters.CharactersInteractor
 import ru.skillbranch.gameofthrones.ui.characters.details.CharacterViewModel
