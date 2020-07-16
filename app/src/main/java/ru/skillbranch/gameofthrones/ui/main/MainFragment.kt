@@ -19,8 +19,8 @@ import ru.skillbranch.gameofthrones.ui.characters.list.CharactersListFragment
 import ru.skillbranch.gameofthrones.utils.ui.addOneTimeOnGlobalLayoutListener
 import ru.skillbranch.gameofthrones.utils.ui.observeState
 import ru.skillbranch.gameofthrones.utils.ui.setDisplayHomeAsUpEnabled
-import ru.skillbranch.gameofthrones.utils.views.ColoredTabsAppBar
-import ru.skillbranch.gameofthrones.utils.views.ColoredTabsAppBar.ColoredTab
+import ru.skillbranch.gameofthrones.utils.ui.view.ColoredTabsAppBar
+import ru.skillbranch.gameofthrones.utils.ui.view.ColoredTabsAppBar.ColoredTab
 
 class MainFragment : Fragment(), SearchView.OnQueryTextListener {
 

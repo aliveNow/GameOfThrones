@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ru.skillbranch.gameofthrones.utils.views.ColoredTabsAppBar
+        <ru.skillbranch.gameofthrones.utils.ui.view.ColoredTabsAppBar
             android:id="@+id/tabsAppBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

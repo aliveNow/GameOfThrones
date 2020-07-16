@@ -48,37 +48,37 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ru.skillbranch.gameofthrones.utils.views.CharacterTraitView
+            <ru.skillbranch.gameofthrones.utils.ui.view.CharacterTraitView
                 android:id="@+id/ctwWords"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:traitTitle="@string/character_words" />
 
-            <ru.skillbranch.gameofthrones.utils.views.CharacterTraitView
+            <ru.skillbranch.gameofthrones.utils.ui.view.CharacterTraitView
                 android:id="@+id/ctwBorn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:traitTitle="@string/character_born" />
 
-            <ru.skillbranch.gameofthrones.utils.views.CharacterTraitView
+            <ru.skillbranch.gameofthrones.utils.ui.view.CharacterTraitView
                 android:id="@+id/ctwTitles"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:traitTitle="@string/character_titles" />
 
-            <ru.skillbranch.gameofthrones.utils.views.CharacterTraitView
+            <ru.skillbranch.gameofthrones.utils.ui.view.CharacterTraitView
                 android:id="@+id/ctwAliases"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:traitTitle="@string/character_aliases" />
 
-            <ru.skillbranch.gameofthrones.utils.views.ButtonCharacterTraitView
+            <ru.skillbranch.gameofthrones.utils.ui.view.ButtonCharacterTraitView
                 android:id="@+id/bctFather"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:traitTitle="@string/character_father" />
 
-            <ru.skillbranch.gameofthrones.utils.views.ButtonCharacterTraitView
+            <ru.skillbranch.gameofthrones.utils.ui.view.ButtonCharacterTraitView
                 android:id="@+id/bctMother"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

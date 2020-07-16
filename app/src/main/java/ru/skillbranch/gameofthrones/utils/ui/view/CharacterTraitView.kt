@@ -1,4 +1,4 @@
-package ru.skillbranch.gameofthrones.utils.views
+package ru.skillbranch.gameofthrones.utils.ui.view
 
 import android.content.Context
 import android.util.AttributeSet
