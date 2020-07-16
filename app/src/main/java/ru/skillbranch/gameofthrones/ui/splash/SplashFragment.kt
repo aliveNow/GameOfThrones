@@ -14,6 +14,7 @@ import org.koin.android.ext.android.getKoin
 import org.koin.android.viewmodel.koin.getViewModel
 import ru.skillbranch.gameofthrones.databinding.FragmentSplashBinding
 import ru.skillbranch.gameofthrones.ui.splash.SplashViewModel.AnimationState
+import ru.skillbranch.gameofthrones.utils.ui.addOneTimeOnGlobalLayoutListener
 import ru.skillbranch.gameofthrones.utils.ui.getDrawableById
 import ru.skillbranch.gameofthrones.utils.ui.observeState
 
@@ -37,12 +38,9 @@ class SplashFragment : Fragment() {
                 onAnimationEnd()
             }
         })
-        vb.imgForeground.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-                view.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                viewModel.animation.value?.let { startAnimation(it) }
-            }
-        })
+        vb.imgForeground.addOneTimeOnGlobalLayoutListener {
+            viewModel.animation.value?.let { startAnimation(it) }
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

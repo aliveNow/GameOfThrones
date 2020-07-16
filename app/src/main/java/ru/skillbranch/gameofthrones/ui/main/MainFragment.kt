@@ -8,22 +8,19 @@ import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 import com.zys.brokenview.BrokenCallback
 import org.koin.android.ext.android.getKoin
 import org.koin.android.viewmodel.koin.getViewModel
-import ru.skillbranch.gameofthrones.HouseType
 import ru.skillbranch.gameofthrones.R
 import ru.skillbranch.gameofthrones.databinding.FragmentMainBinding
 import ru.skillbranch.gameofthrones.ui.characters.list.CharactersListFragment
-import ru.skillbranch.gameofthrones.utils.ui.hideSoftInput
+import ru.skillbranch.gameofthrones.utils.ui.addOneTimeOnGlobalLayoutListener
+import ru.skillbranch.gameofthrones.utils.ui.observeState
 import ru.skillbranch.gameofthrones.utils.ui.setDisplayHomeAsUpEnabled
 import ru.skillbranch.gameofthrones.utils.views.ColoredTabsAppBar
+import ru.skillbranch.gameofthrones.utils.views.ColoredTabsAppBar.ColoredTab
 
 class MainFragment : Fragment(), SearchView.OnQueryTextListener {
 
@@ -31,17 +28,14 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
     private lateinit var vb: FragmentMainBinding
     private val args by navArgs<MainFragmentArgs>()
 
-    val toolbar: Toolbar
+    private val toolbar: Toolbar
         get() = vb.tabsAppBar.toolbar
-
-    val tabLayout: TabLayout
-        get() = vb.tabsAppBar.tabLayout
 
     private var menuSearchView: SearchView? = null
 
     private val onSearchBackPressedCallback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
-            menuSearchView?.isIconified = true
+            viewModel.searchCloseClicked()
         }
     }
 
@@ -59,73 +53,50 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
             .root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb.imgSplash.setImageDrawable(requireContext().getDrawable(args.splashImageId))
         vb.brokenView.setCallback(object : BrokenCallback() {
             override fun onFallingEnd(v: View?) {
-                vb.brokenView.reset()
-                vb.imgSplash.visibility = View.GONE
-                vb.brokenView.visibility = View.GONE
+                resetSplashAnimation()
             }
         })
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
-        vb.viewPager.adapter = ViewPagerFragmentStateAdapter(requireActivity())
-        vb.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {
-                if (state == ViewPager2.SCROLL_STATE_SETTLING) {
-                    /*val position = vb.viewPager.currentItem
-                    val currentThemeId = AppConfig.appThemeId
-                    val newThemeId = if (position == 0) R.style.AppThemeOverlay_Lannister else R.style.AppThemeOverlay_Baratheon
-                    if (currentThemeId != newThemeId) {
-                        AppConfig.appThemeId = newThemeId
-                        toolbar.context.setTheme(newThemeId)
-                    }*/
-                }
-            }
-
-            override fun onPageSelected(position: Int) {
-
-            }
-        })
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-
-            }
-
-        })
-        vb.tabsAppBar.colorIds = HouseType.values().map { it.colorPrimaryId }
-        ColoredTabsAppBar.ColoredTabsAppBarMediator(
-            vb.tabsAppBar,
-            vb.viewPager,
-            TabLayoutMediator.TabConfigurationStrategy { tab, position ->
-                tab.text = HouseType.values()[position].shortName
-            }).attach()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setDisplayHomeAsUpEnabled(false)
         viewModel = getKoin().getViewModel(this, clazz = MainViewModel::class)
         requireActivity().onBackPressedDispatcher.addCallback(onSearchBackPressedCallback)
-        viewModel.showAnimation.observe(viewLifecycleOwner, Observer {
-            vb.brokenView.createAnimator(vb.imgSplash)
-                .start()
-        })
+        if (viewModel.wasSplashAnimationShown) {
+            resetSplashAnimation()
+        } else {
+            vb.imgSplash.addOneTimeOnGlobalLayoutListener {
+                vb.brokenView.createAnimator(vb.imgSplash).start()
+            }
+        }
+        vb.viewPager.adapter =
+            ViewPagerFragmentStateAdapter(requireActivity(), viewModel.houseNames)
+        /*
+         /*val position = vb.viewPager.currentItem
+                     val currentThemeId = AppConfig.appThemeId
+                     val newThemeId = if (position == 0) R.style.AppThemeOverlay_Lannister else R.style.AppThemeOverlay_Baratheon
+                     if (currentThemeId != newThemeId) {
+                         AppConfig.appThemeId = newThemeId
+                         toolbar.context.setTheme(newThemeId)
+                     }*/
+         */
+        vb.tabsAppBar.coloredTabs =
+            viewModel.houseTypes.map { ColoredTab(it.shortName, it.colorPrimaryId) }
+        ColoredTabsAppBar.ColoredTabsAppBarMediator(vb.tabsAppBar, vb.viewPager).attach()
+        viewModel.isSearchVisible.observeState(this) {
+            updateSearchViewVisibility(it)
+        }
+    }
+
+    override fun onDestroyView() {
+        onSearchBackPressedCallback.isEnabled = false
+        super.onDestroyView()
     }
 
     override fun onDestroy() {
@@ -133,45 +104,22 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
         super.onDestroy()
     }
 
-    /*override fun onResume() {
-        super.onResume()
-        val listener = object: View.OnAttachStateChangeListener {
-             override fun onViewAttachedToWindow(v: View?) {
-                 vb.brokenView.createAnimator(vb.imgSplash)
-                     .start()
-             }
-             override fun onViewDetachedFromWindow(v: View?) {}
-         }
-         vb.brokenView.addOnAttachStateChangeListener(listener)
-    }*/
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_characters_list, menu)
-        val searchItem = menu.findItem(R.id.search)
-
-        (searchItem.actionView as? SearchView)?.apply {
-            menuSearchView = this
+        menuSearchView = menu.findItem(R.id.search).actionView as? SearchView
+        menuSearchView?.apply {
             setIconifiedByDefault(true)
             setOnQueryTextListener(this@MainFragment)
             queryHint = getString(R.string.characters_list_search_hint)
-            viewModel.lastSearchString?.let {
-                isIconified = false
-                onSearchViewIsVisible(true)
-                setQuery(it, false)
-            }
+            updateSearchViewVisibility(viewModel.isSearchVisible.value ?: false)
             setOnSearchClickListener {
-                onSearchViewIsVisible(true)
+                viewModel.searchShowClicked()
             }
             setOnCloseListener {
-                onSearchViewIsVisible(false)
+                viewModel.searchCloseClicked()
                 false
             }
         }
-    }
-
-    private fun onSearchViewIsVisible(isVisible: Boolean) {
-        setDisplayHomeAsUpEnabled(isVisible)
-        onSearchBackPressedCallback.isEnabled = isVisible
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
@@ -179,16 +127,39 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
         return true
     }
 
-    override fun onQueryTextSubmit(query: String?): Boolean = true
+    override fun onQueryTextSubmit(query: String?): Boolean = false
 
-    class ViewPagerFragmentStateAdapter(activity: FragmentActivity) :
+    private fun updateSearchViewVisibility(isVisible: Boolean) {
+        menuSearchView?.apply {
+            setDisplayHomeAsUpEnabled(isVisible)
+            onSearchBackPressedCallback.isEnabled = isVisible
+            val newQuery = viewModel.lastSearchString?.takeIf { it.isNotEmpty() }
+            if (newQuery != query.takeIf { it.isNotEmpty() }) {
+                setQuery(newQuery, false)
+            }
+            if (isIconified == isVisible) {
+                isIconified = !isVisible
+            }
+        }
+    }
+
+    private fun resetSplashAnimation() {
+        vb.brokenView.reset()
+        vb.imgSplash.visibility = View.GONE
+        vb.brokenView.visibility = View.GONE
+        viewModel.wasSplashAnimationShown = true
+    }
+
+    private class ViewPagerFragmentStateAdapter(
+        activity: FragmentActivity,
+        private val tabNames: List<String>
+    ) :
         FragmentStateAdapter(activity) {
 
         override fun createFragment(position: Int): Fragment =
-            CharactersListFragment.newInstance(HouseType.values()[position].shortName)
+            CharactersListFragment.newInstance(tabNames[position])
 
-        //FIXME: to VM
-        override fun getItemCount(): Int = HouseType.values().size
+        override fun getItemCount(): Int = tabNames.size
 
     }
 

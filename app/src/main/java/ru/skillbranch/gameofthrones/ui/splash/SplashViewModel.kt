@@ -59,6 +59,6 @@ class SplashViewModel(
 
     companion object {
         private const val ANIMATION_DURATION = 2000L
-        private const val MIN_SPLASH_DURATION = 5000L
+        private const val MIN_SPLASH_DURATION = 1000L
     }
 }

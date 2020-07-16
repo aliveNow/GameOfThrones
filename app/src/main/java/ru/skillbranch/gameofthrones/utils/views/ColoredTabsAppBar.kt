@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils
+import androidx.annotation.ColorRes
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -23,7 +24,7 @@ import kotlin.math.max
 
 class ColoredTabsAppBar(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
 
-    var colorIds: List<Int> = emptyList()
+    var coloredTabs: List<ColoredTab> = emptyList()
     val toolbar: Toolbar
         get() = vb.toolbar
 
@@ -111,7 +112,7 @@ class ColoredTabsAppBar(context: Context, attrs: AttributeSet) : ConstraintLayou
     }
 
     private fun getColorAtPosition(position: Int): Int? {
-        val colorId = if (colorIds.size > position) colorIds[position] else null
+        val colorId = if (coloredTabs.size > position) coloredTabs[position].colorId else null
         return colorId?.let { ContextCompat.getColor(context, it) }
     }
 
@@ -132,13 +133,19 @@ class ColoredTabsAppBar(context: Context, attrs: AttributeSet) : ConstraintLayou
         return result
     }
 
+    data class ColoredTab(
+        val name: String,
+        @ColorRes val colorId: Int
+    )
+
     class ColoredTabsAppBarMediator(
         private val tabsAppBar: ColoredTabsAppBar,
-        private val viewPager: ViewPager2,
-        tabConfigurationStrategy: TabLayoutMediator.TabConfigurationStrategy
+        private val viewPager: ViewPager2
     ) {
-        val tabMediator =
-            TabLayoutMediator(tabsAppBar.tabLayout, viewPager, tabConfigurationStrategy)
+        private val tabMediator =
+            TabLayoutMediator(tabsAppBar.tabLayout, viewPager) { tab, position ->
+                tab.text = tabsAppBar.coloredTabs[position].name
+            }
         var onPageSelected: ((position: Int) -> Unit)? = null
 
         fun attach() {

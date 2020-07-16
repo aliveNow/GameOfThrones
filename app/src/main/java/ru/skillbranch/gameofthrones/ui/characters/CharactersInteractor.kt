@@ -1,30 +1,20 @@
 package ru.skillbranch.gameofthrones.ui.characters
 
-import ru.skillbranch.gameofthrones.AppConfig
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 class CharactersInteractor {
+
+    val searchStringLiveData: LiveData<String>
+        get() = _searchStringLiveData
 
     var searchString: String? = null
         set(value) {
             if (value != field) {
                 field = if (value.isNullOrEmpty()) null else value
-                searchStringListeners.forEach { it.onSearchStringChanged(value) }
+                _searchStringLiveData.value = field
             }
         }
 
-    private val searchStringListeners = mutableListOf<OnSearchStringChangeListener>()
-
-    fun addOnSearchStringChangeListener(listener: OnSearchStringChangeListener) {
-        removeOnSearchStringChangeListener(listener)
-        searchStringListeners.add(listener)
-    }
-
-    fun removeOnSearchStringChangeListener(listener: OnSearchStringChangeListener) {
-        searchStringListeners.remove(listener)
-    }
-
-    interface OnSearchStringChangeListener {
-        fun onSearchStringChanged(searchString: String?)
-    }
-
+    private val _searchStringLiveData = MutableLiveData<String>()
 }

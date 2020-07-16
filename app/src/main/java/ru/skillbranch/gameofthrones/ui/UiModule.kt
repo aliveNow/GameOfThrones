@@ -13,7 +13,7 @@ import ru.skillbranch.gameofthrones.ui.splash.SplashViewModel
 val uiModule = module {
     single { CharactersInteractor() }
     viewModel { SplashViewModel(HouseType.values().map { it.coatOfArmsId }.shuffled()) }
-    viewModel { MainViewModel(get(), AppConfig.NEED_HOUSES.toList()) }
+    viewModel { MainViewModel(get(), HouseType.values().toList()) }
     viewModel { (houseName: String) -> CharactersListViewModel(get(), houseName) }
     viewModel { (shortHouseName: String, characterId: String) ->
         CharacterViewModel(shortHouseName, characterId)

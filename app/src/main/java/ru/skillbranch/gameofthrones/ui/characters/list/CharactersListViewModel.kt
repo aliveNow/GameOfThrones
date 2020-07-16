@@ -1,6 +1,7 @@
 package ru.skillbranch.gameofthrones.ui.characters.list
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
 import ru.skillbranch.gameofthrones.HouseType
@@ -11,7 +12,7 @@ import ru.skillbranch.gameofthrones.ui.characters.CharactersInteractor
 class CharactersListViewModel(
     private val interactor: CharactersInteractor,
     shortHouseName: String
-) : ViewModel(), CharactersInteractor.OnSearchStringChangeListener {
+) : ViewModel() {
 
     val houseType = checkNotNull(HouseType.findByShortName(shortHouseName))
     val itemsList = MutableLiveData<List<CharacterItem>>()
@@ -20,20 +21,22 @@ class CharactersListViewModel(
     private var sourceItems: List<CharacterItem> = emptyList()
     private var lastSearchString: String? = null
     private var searchJob: Job? = null
+    private val searchStringObserver = Observer<String?> { onSearchStringChanged(it) }
 
     init {
-        interactor.addOnSearchStringChangeListener(this)
+        interactor.searchStringLiveData.observeForever(searchStringObserver)
+
         lastSearchString = interactor.searchString
         loadCharacters()
     }
 
     override fun onCleared() {
+        interactor.searchStringLiveData.removeObserver(searchStringObserver)
         super.onCleared()
         viewModelJob.cancel()
-        interactor.removeOnSearchStringChangeListener(this)
     }
 
-    override fun onSearchStringChanged(searchString: String?) {
+    private fun onSearchStringChanged(searchString: String?) {
         if (searchString != lastSearchString) {
             lastSearchString = searchString
             if (sourceItems.isNotEmpty()) {
@@ -70,6 +73,5 @@ class CharactersListViewModel(
             }
         }
     }
-
 
 }
