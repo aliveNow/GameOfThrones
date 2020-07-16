@@ -9,7 +9,7 @@ import androidx.room.ForeignKey.CASCADE
     foreignKeys = [
         ForeignKey(
             entity = House::class,
-            parentColumns = ["name"],
+            parentColumns = ["shortName"],
             childColumns = ["houseId"],
             onDelete = CASCADE
         )
@@ -45,7 +45,7 @@ data class CharacterFull(
     @Relation(
         entity = House::class,
         parentColumn = "houseId",
-        entityColumn = "name",
+        entityColumn = "shortName",
         projection = ["words"]
     )
     val words: String,

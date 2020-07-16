@@ -9,7 +9,6 @@ import ru.skillbranch.gameofthrones.data.remote.res.HouseRes
 
 interface IceAndFireApi {
 
-    //TODO: RootRepo
     @GET("/api/houses")
     fun getAllHouses(
         @Query("page") pageNum: Int,

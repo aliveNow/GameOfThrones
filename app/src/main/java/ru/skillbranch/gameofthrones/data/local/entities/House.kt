@@ -9,8 +9,9 @@ import androidx.room.PrimaryKey
 )
 data class House(
     val id: String,
-    @PrimaryKey
     val name: String,
+    @PrimaryKey
+    val shortName: String,
     val region: String,
     val coatOfArms: String,
     val words: String,

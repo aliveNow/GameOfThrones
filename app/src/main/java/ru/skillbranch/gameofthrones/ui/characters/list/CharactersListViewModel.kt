@@ -52,7 +52,7 @@ class CharactersListViewModel(
                 RootRepository.findCharactersByHouseName2(houseType.fullName)
             }
             sourceItems = withContext(Dispatchers.IO) {
-                RootRepository.findCharactersByHouseName(houseType.fullName)
+                RootRepository.findCharactersByHouseName(houseType.shortName)
             }
             filterCharacters(lastSearchString)
         }

@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.annotation.VisibleForTesting
 import retrofit2.HttpException
 import ru.skillbranch.gameofthrones.AppConfig
+import ru.skillbranch.gameofthrones.HouseType
 import ru.skillbranch.gameofthrones.data.local.AppDatabase
 import ru.skillbranch.gameofthrones.data.local.entities.Character
 import ru.skillbranch.gameofthrones.data.local.entities.CharacterFull
@@ -37,7 +38,7 @@ object RootRepository {
     }
 
     suspend fun loadDataAndInsertToDB() {
-        suspendCoroutine { continuation: Continuation<Unit> ->
+        val isDropped = suspendCoroutine { continuation: Continuation<Unit> ->
             dropDb {
                 continuation.resumeWith(Result.success(Unit))
             }
@@ -51,13 +52,15 @@ object RootRepository {
         val houses = mutableListOf<HouseRes>()
         val characters = mutableListOf<CharacterRes>()
         housesWithCharacters.forEach { (house, houseCharacters) ->
-            val houseId = house.name
+            val houseId = AppConfig.HOUSE_NAMES_MAP[house.name]
             houses.add(house)
             houseCharacters.forEach { it.houseId = houseId }
             //TODO: remove it
             val firstChar = houseCharacters.first()
             val testCharacters = houseCharacters.map { character ->
-                character.copy(father = firstChar.url.takeIf { character.url != it } ?: "")
+                character.copy(father = firstChar.url.takeIf { character.url != it } ?: "").apply {
+                    this.houseId = houseId
+                }
             }
             //supposing that character can be loyal only to one house...
             characters.addAll(testCharacters)
@@ -96,9 +99,23 @@ object RootRepository {
      * Получение данных о всех домах из сети
      * @param result - колбек содержащий в себе список данных о домах
      */
+    @Suppress("unused")
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun getAllHouses(result: (houses: List<HouseRes>) -> Unit) {
-        //TODO implement me
+        val houses = mutableListOf<HouseRes>()
+        val pageNum = FIRST_PAGE_NUM
+        do {
+            val newHouses: List<HouseRes>
+            with(api.getAllHouses(pageNum, MAX_PAGE_SIZE).execute()) {
+                if (isSuccessful) {
+                    newHouses = body() ?: emptyList()
+                    houses.addAll(newHouses)
+                } else {
+                    throw HttpException(this)
+                }
+            }
+        } while (newHouses.isNotEmpty())
+        result(houses)
     }
 
     /**
@@ -165,24 +182,26 @@ object RootRepository {
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun insertHouses(houses: List<HouseRes>, complete: () -> Unit) {
-        db.getHouseDao().insertAll(houses.map {
-            House(
-                id = it.url.getId(),
-                name = it.name,
-                region = it.region,
-                coatOfArms = it.coatOfArms,
-                words = it.words,
-                titles = it.titles,
-                seats = it.seats,
-                currentLord = it.currentLord.getId(),
-                heir = it.heir.getId(),
-                overlord = it.overlord.getId(),
-                founded = it.founded,
-                founder = it.founder.getId(),
-                diedOut = it.diedOut,
-                ancestralWeapons = it.ancestralWeapons
-            )
-        })
+        val houseNamesMap =
+            db.getHouseDao().insertAll(houses.map {
+                House(
+                    id = it.url.getId(),
+                    name = it.name,
+                    shortName = checkNotNull(AppConfig.HOUSE_NAMES_MAP[it.name]),
+                    region = it.region,
+                    coatOfArms = it.coatOfArms,
+                    words = it.words,
+                    titles = it.titles,
+                    seats = it.seats,
+                    currentLord = it.currentLord.getId(),
+                    heir = it.heir.getId(),
+                    overlord = it.overlord.getId(),
+                    founded = it.founded,
+                    founder = it.founder.getId(),
+                    diedOut = it.diedOut,
+                    ancestralWeapons = it.ancestralWeapons
+                )
+            })
         complete.invoke()
     }
 
@@ -252,6 +271,7 @@ object RootRepository {
      * Метод возвращет true если в базе нет ни одной записи, иначе false
      * @param result - колбек результата проверки
      */
+    @Suppress("MemberVisibilityCanBePrivate")
     fun isNeedUpdate(result: (isNeed: Boolean) -> Unit) {
         result(db.getCharacterDao().getRowCount() == 0)
     }

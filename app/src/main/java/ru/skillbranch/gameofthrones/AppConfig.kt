@@ -11,6 +11,7 @@ object AppConfig {
         "House Baratheon of Dragonstone",
         "House Nymeros Martell of Sunspear" */
     )
+    val HOUSE_NAMES_MAP = HouseType.values().map { it.fullName to it.shortName }.toMap()
     const val BASE_URL = "https://www.anapioficeandfire.com/"
 }
 
