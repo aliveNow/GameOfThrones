@@ -7,6 +7,7 @@
     <color name="color_gray">#8D8C8C</color>
     <color name="color_gray_light">#dedede</color>
     <color name="color_white">#FFFFFF</color>
+    <color name="color_black">#000000</color>
 
     <color name="stark_primary">#414141</color>
     <color name="stark_accent">#C3C3C1</color>

@@ -22,15 +22,17 @@
             android:id="@+id/tvTitle"
             android:layout_width="@dimen/character_trait_title_width"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_marginStart="@dimen/character_trait_title_margin_start"
-            android:layout_marginEnd="@dimen/character_trait_title_margin_end"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="@color/color_black"
             tools:text="Aliases:" />
 
         <Button
             android:id="@+id/tvValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/color_white"
             tools:text="SOME TARGARYEN GUY" />
 
     </LinearLayout>

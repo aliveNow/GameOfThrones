@@ -51,8 +51,8 @@ class CharacterFragment : Fragment() {
         viewModel.character.observe(viewLifecycleOwner, Observer {
             vb.ctwWords.setValueOrGone(it.words)
             vb.ctwBorn.setValueOrGone(it.born)
-            vb.ctwTitles.setValueOrGone(it.titles.joinToString(separator = ", "))
-            vb.ctwAliases.setValueOrGone(it.aliases.joinToString(separator = ", "))
+            vb.ctwTitles.setValueOrGone(it.titles.joinToString(separator = "\n "))
+            vb.ctwAliases.setValueOrGone(it.aliases.joinToString(separator = "\n "))
             initButton(vb.bctFather, it.father)
             initButton(vb.bctMother, it.mother)
         })

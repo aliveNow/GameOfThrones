@@ -18,7 +18,7 @@
             android:layout_width="@dimen/icon_size_medium"
             android:layout_height="@dimen/icon_size_medium"
             android:src="@drawable/ic_icon_decor"
-            android:tint="?colorPrimary" />
+            android:tint="?colorAccent" />
 
         <TextView
             android:id="@+id/tvTitle"
@@ -26,7 +26,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/character_trait_title_margin_start"
             android:layout_marginEnd="@dimen/character_trait_title_margin_end"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="@color/color_black"
             tools:text="Aliases:" />
 
         <TextView
@@ -34,7 +35,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="@color/color_gray_dark"
             tools:text="An API of Ice And Fire provides a lot of data" />
 
     </LinearLayout>

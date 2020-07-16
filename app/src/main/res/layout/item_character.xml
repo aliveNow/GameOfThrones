@@ -12,8 +12,9 @@
 
     <ImageView
         android:id="@+id/imgIcon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="5dp"
         android:contentDescription="@string/characters_list_icon_content_description"
         tools:src="@drawable/baratheon_icon" />
 
@@ -23,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_toEndOf="@id/imgIcon"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:textColor="@color/color_gray_dark"
         tools:text="Stark" />
 
