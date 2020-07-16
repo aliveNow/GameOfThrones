@@ -1,39 +1,39 @@
 package ru.skillbranch.gameofthrones.ui.characters.details
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
 import ru.skillbranch.gameofthrones.HouseType
 import ru.skillbranch.gameofthrones.data.local.entities.CharacterFull
 import ru.skillbranch.gameofthrones.repositories.RootRepository
+import ru.skillbranch.gameofthrones.utils.ui.base.BaseViewModel
+import ru.skillbranch.gameofthrones.utils.ui.data.Event
+import ru.skillbranch.gameofthrones.utils.ui.data.EventLiveData
+import java.lang.Exception
 
 class CharacterViewModel(
     shortHouseName: String,
     private val characterId: String
-) : ViewModel() {
+) : BaseViewModel() {
 
     val houseType = checkNotNull(HouseType.findByShortName(shortHouseName))
     val title = MutableLiveData<String>()
     val character = MutableLiveData<CharacterFull>()
-
-    private val viewModelJob = SupervisorJob()
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+    val finish = EventLiveData<Unit>()
 
     init {
         loadCharacter()
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
-    }
-
     private fun loadCharacter() {
         uiScope.launch {
-            character.value = withContext(Dispatchers.IO) {
-                RootRepository.findCharacterFullById(characterId)
+            try {
+                character.value = withContext(Dispatchers.IO) {
+                    RootRepository.findCharacterFullById(characterId)
+                }
+                title.value = character.value?.name
+            }catch (e : Exception) {
+                finish.value = Event(Unit)
             }
-            title.value = character.value?.name
         }
     }
 }

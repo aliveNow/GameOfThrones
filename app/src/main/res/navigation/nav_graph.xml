@@ -30,7 +30,11 @@
 
         <action
             android:id="@+id/actionFromCharactersListFragmentToDetailFragment"
-            app:destination="@id/characterFragment" />
+            app:destination="@id/characterFragment"
+            app:enterAnim="@anim/base_slide_in_right"
+            app:exitAnim="@anim/base_slide_out_left"
+            app:popEnterAnim="@anim/base_slide_in_left"
+            app:popExitAnim="@anim/base_slide_out_right"/>
 
     </fragment>
 
@@ -46,6 +50,14 @@
         <argument
             android:name="characterId"
             app:argType="string" />
+
+        <action
+            android:id="@+id/actionFromCharacterDetailFragmentToDetailFragment"
+            app:destination="@id/characterFragment"
+            app:enterAnim="@anim/base_slide_in_right"
+            app:exitAnim="@anim/base_slide_out_left"
+            app:popEnterAnim="@anim/base_slide_in_left"
+            app:popExitAnim="@anim/base_slide_out_right"/>
 
     </fragment>
 
