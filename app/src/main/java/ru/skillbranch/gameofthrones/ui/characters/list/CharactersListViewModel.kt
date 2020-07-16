@@ -2,22 +2,21 @@ package ru.skillbranch.gameofthrones.ui.characters.list
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
 import ru.skillbranch.gameofthrones.HouseType
 import ru.skillbranch.gameofthrones.data.local.entities.CharacterItem
 import ru.skillbranch.gameofthrones.repositories.RootRepository
 import ru.skillbranch.gameofthrones.ui.characters.CharactersInteractor
+import ru.skillbranch.gameofthrones.utils.ui.base.BaseViewModel
 
 class CharactersListViewModel(
     private val interactor: CharactersInteractor,
     shortHouseName: String
-) : ViewModel() {
+) : BaseViewModel() {
 
     val houseType = checkNotNull(HouseType.findByShortName(shortHouseName))
     val itemsList = MutableLiveData<List<CharacterItem>>()
-    private val viewModelJob = SupervisorJob()
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
     private var sourceItems: List<CharacterItem> = emptyList()
     private var lastSearchString: String? = null
     private var searchJob: Job? = null
@@ -25,7 +24,6 @@ class CharactersListViewModel(
 
     init {
         interactor.searchStringLiveData.observeForever(searchStringObserver)
-
         lastSearchString = interactor.searchString
         loadCharacters()
     }
@@ -33,7 +31,6 @@ class CharactersListViewModel(
     override fun onCleared() {
         interactor.searchStringLiveData.removeObserver(searchStringObserver)
         super.onCleared()
-        viewModelJob.cancel()
     }
 
     private fun onSearchStringChanged(searchString: String?) {
@@ -47,10 +44,6 @@ class CharactersListViewModel(
 
     private fun loadCharacters() {
         uiScope.launch {
-            //TODO: remove
-            val fullChars = withContext(Dispatchers.IO) {
-                RootRepository.findCharactersByHouseName2(houseType.fullName)
-            }
             sourceItems = withContext(Dispatchers.IO) {
                 RootRepository.findCharactersByHouseName(houseType.shortName)
             }

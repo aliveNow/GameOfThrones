@@ -4,6 +4,8 @@
     <string name="splash_no_connection_error">Интернет недоступен - приложение не может быть запущено. Подключитесь к интернету и перезапустите приложение</string>
 
     <string name="characters_list_search_hint">Search character</string>
+    <string name="characters_list_icon_content_description">House icon</string>
+    <string name="characters_list_information_unknown">Information is unknown</string>
 
     <string name="character_words">Words:</string>
     <string name="character_born">Born:</string>

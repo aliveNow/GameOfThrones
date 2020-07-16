@@ -6,14 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import org.koin.android.ext.android.getKoin
 import org.koin.android.viewmodel.koin.getViewModel
 import org.koin.core.parameter.parametersOf
+import ru.skillbranch.gameofthrones.HouseType
 import ru.skillbranch.gameofthrones.databinding.FragmentCharactersListBinding
 import ru.skillbranch.gameofthrones.ui.main.MainFragmentDirections
-import ru.skillbranch.gameofthrones.utils.ui.setDisplayHomeAsUpEnabled
+import ru.skillbranch.gameofthrones.utils.ui.observeState
+
 
 class CharactersListFragment : Fragment() {
 
@@ -32,12 +34,25 @@ class CharactersListFragment : Fragment() {
             .root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        vb.rvList.adapter = CharactersListAdapter().apply {
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val houseName = checkNotNull(arguments?.getString(ARG_CHARACTERS_LIST_HOUSE_NAME))
+        viewModel = getKoin().getViewModel(this, CharactersListViewModel::class) {
+            parametersOf(houseName)
+        }
+        initRecycleView(viewModel.houseType)
+        viewModel.itemsList.observeState(this) {
+            adapter.items = it
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun initRecycleView(houseType: HouseType) {
+        vb.rvList.adapter = CharactersListAdapter(houseType).apply {
             onItemClickListener = {
                 findNavController().navigate(
                     //FIXME: from there it's bad -_-
+                    //UPD: but time is too short >_< In two hours a deadline is approaching, brrr
                     MainFragmentDirections.actionFromCharactersListFragmentToDetailFragment(
                         shortHouseName = viewModel.houseType.shortName,
                         characterId = it.id
@@ -45,22 +60,13 @@ class CharactersListFragment : Fragment() {
                 )
             }
         }
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        val houseName = checkNotNull(arguments?.getString(ARG_CHARACTERS_LIST_HOUSE_NAME))
-        viewModel = getKoin().getViewModel(
-            this,
-            clazz = CharactersListViewModel::class//,
-            //qualifier = named(houseName)
-        ) {
-            parametersOf(houseName)
-        }
-        viewModel.itemsList.observe(viewLifecycleOwner, Observer {
-            adapter.items = it
-            adapter.notifyDataSetChanged()
-        })
+        //FIXME: дизайн у сепаратора другой, но уже потом...
+        vb.rvList.addItemDecoration(
+            DividerItemDecoration(
+                requireContext(),
+                DividerItemDecoration.VERTICAL
+            )
+        )
     }
 
     companion object {

@@ -256,7 +256,7 @@ object RootRepository {
         result(db.getCharacterDao().getRowCount() == 0)
     }
 
-    private fun <T> Call<T>.executeOrException(): T =
+    private fun <T : Any> Call<T>.executeOrException(): T =
         with(execute()) {
             if (isSuccessful) {
                 checkNotNull(body())

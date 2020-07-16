@@ -42,18 +42,3 @@ inline fun <T> EventLiveData<T>.observeEvent(
 inline fun <T> LiveData<T>.observeState(fragment: Fragment, crossinline observer: (T) -> Unit) =
     this.observe(fragment.viewLifecycleOwner, Observer { observer.invoke(it) })
 //endregion
-
-fun Fragment.hideSoftInput(clearFocus: Boolean) {
-    with(requireActivity()) {
-        val imm: InputMethodManager =
-            getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        var view: View? = currentFocus
-        if (view == null) {
-            view = View(this)
-        }
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
-        if (clearFocus) {
-            view.clearFocus()
-        }
-    }
-}
