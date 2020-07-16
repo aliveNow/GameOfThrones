@@ -7,17 +7,27 @@
         <item name="colorAccent">@color/color_accent</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:editTextColor">@color/color_white</item>
+        <item name="android:textColorPrimary">@color/color_white</item>
+        <item name="android:textColorSecondary">@color/color_gray_light</item>
+        <item name="android:textColorTertiary">@color/color_gray_light</item>
+        <item name="android:textColorHint">@color/color_gray_light</item>
+        <item name="android:textCursorDrawable">@drawable/cursor_white</item>
+        <item name="toolbarStyle">@style/App.ToolbarStyle</item>
+        <item name="searchViewStyle">@style/App.SearchViewStyle</item>
     </style>
 
     <style name="AppTheme.Splash">
         <item name="android:windowBackground">@drawable/spash</item>
     </style>
 
+    <style name="App.ToolbarStyle" parent="Widget.AppCompat.Toolbar">
+        <item name="navigationIcon">@drawable/ic_baseline_arrow_back_24dp</item>
+    </style>
 
-    <style name="AppTheme.Lannister">
-        <item name="colorPrimary">@color/lannister_primary</item>
-        <item name="colorPrimaryDark">@color/lannister_dark</item>
-        <item name="colorAccent">@color/lannister_accent</item>
+    <style name="App.SearchViewStyle" parent="Widget.AppCompat.Light.SearchView">
+        <item name="submitBackground">@null</item>
+        <item name="queryBackground">@null</item>
     </style>
 
     <style name="AppThemeOverlay.Stark" parent="ThemeOverlay.AppCompat.Light">
@@ -68,7 +78,5 @@
         <item name="colorAccent">@color/greyjoy_accent</item>
         <item name="colorButtonNormal">@color/greyjoy_primary</item>
     </style>
-
-
 
 </resources>

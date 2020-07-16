@@ -40,7 +40,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/transparent"
-            app:layout_scrollFlags="scroll|enterAlways" />
+            app:layout_scrollFlags="scroll|enterAlways"
+            tools:title="Game Of Thrones" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
@@ -48,7 +49,8 @@
             android:layout_height="wrap_content"
             app:tabBackground="@android:color/transparent"
             app:tabGravity="fill"
-            app:tabMode="scrollable" />
+            app:tabMode="scrollable"
+            app:tabIndicatorColor="@color/color_white"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
