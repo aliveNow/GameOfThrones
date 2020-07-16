@@ -17,9 +17,7 @@ android {
         jvmTarget = "1.8"
     }
 
-    buildFeatures {
-        viewBinding true
-    }
+    viewBinding.enabled = true
 
     defaultConfig {
         applicationId "ru.skillbranch.gameofthrones"
