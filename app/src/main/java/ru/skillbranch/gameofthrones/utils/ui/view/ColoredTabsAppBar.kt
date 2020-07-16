@@ -37,29 +37,31 @@ class ColoredTabsAppBar(context: Context, attrs: AttributeSet) : ConstraintLayou
 
     init {
         initToolbarDimension()
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                animateTabChangeOnlyOnEvent(tabLayout.selectedTabPosition)
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+        })
     }
 
     override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
         when (event?.action) {
             MotionEvent.ACTION_UP -> {
-                //TODO: только если событие принадлежит tabLayout
-                lastMotionEvent = event
+                val rect = Rect()
+                tabLayout.getGlobalVisibleRect(rect)
+                if (rect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                    lastMotionEvent = event
+                }
             }
         }
         return super.dispatchTouchEvent(event)
     }
 
-    // fun animateBackground(position: Int, positionOffset: Float, only )
-
-    fun animateTabChangeOnlyOnEvent(position: Int) {
-        lastMotionEvent?.let {
-            //animateTabChange(position, it.rawX, it.rawY)
-            animateTabChange(position)
-        }
-        lastMotionEvent = null
-    }
-
+    @Suppress("MemberVisibilityCanBePrivate")
     fun animateTabChange(
         position: Int,
         animationStartX: Float? = null,
@@ -77,7 +79,7 @@ class ColoredTabsAppBar(context: Context, attrs: AttributeSet) : ConstraintLayou
             val startY = (animationStartY ?: rect.exactCenterY()).toInt()
             ViewAnimationUtils.createCircularReveal(this, startX, startY, 0f, radius)
                 .apply {
-                    duration = 2000
+                    duration = 400
                     addListener(object : AnimatorListenerAdapter() {
                         override fun onAnimationEnd(animator: Animator) {
                             vb.backgroundView.setBackgroundColor(newBackgroundColor)
@@ -89,6 +91,13 @@ class ColoredTabsAppBar(context: Context, attrs: AttributeSet) : ConstraintLayou
         }.also {
             it.start()
         }
+    }
+
+    private fun animateTabChangeOnlyOnEvent(position: Int) {
+        lastMotionEvent?.let {
+            animateTabChange(position, it.rawX, it.rawY)
+        }
+        lastMotionEvent = null
     }
 
     private fun getBackgroundColor(position: Int, positionOffset: Float): Int? {
@@ -150,7 +159,6 @@ class ColoredTabsAppBar(context: Context, attrs: AttributeSet) : ConstraintLayou
 
         fun attach() {
             viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-
                 override fun onPageScrolled(
                     position: Int,
                     positionOffset: Float,
@@ -163,16 +171,6 @@ class ColoredTabsAppBar(context: Context, attrs: AttributeSet) : ConstraintLayou
                             }
                         }
                     }
-                }
-
-                override fun onPageScrollStateChanged(state: Int) {
-                    if (state == ViewPager2.SCROLL_STATE_IDLE) {
-                        tabsAppBar.animateTabChangeOnlyOnEvent(tabsAppBar.tabLayout.selectedTabPosition)
-                    }
-                }
-
-                override fun onPageSelected(position: Int) {
-                    //tabsAppBar.animateTabChange(position, onlyOnEvent = true)
                 }
             })
             tabMediator.attach()
