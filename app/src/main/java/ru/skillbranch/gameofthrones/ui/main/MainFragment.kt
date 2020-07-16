@@ -55,40 +55,25 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vb.imgSplash.setImageDrawable(requireContext().getDrawable(args.splashImageId))
-        vb.brokenView.setCallback(object : BrokenCallback() {
-            override fun onFallingEnd(v: View?) {
-                resetSplashAnimation()
-            }
-        })
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = getKoin().getViewModel(this, clazz = MainViewModel::class)
-        requireActivity().onBackPressedDispatcher.addCallback(onSearchBackPressedCallback)
-        if (viewModel.wasSplashAnimationShown) {
-            resetSplashAnimation()
-        } else {
-            vb.imgSplash.addOneTimeOnGlobalLayoutListener {
-                vb.brokenView.createAnimator(vb.imgSplash).start()
-            }
-        }
+        initSplashAnimation()
+
         vb.viewPager.adapter =
             ViewPagerFragmentStateAdapter(requireActivity(), viewModel.houseNames)
-        /*
-         /*val position = vb.viewPager.currentItem
-                     val currentThemeId = AppConfig.appThemeId
-                     val newThemeId = if (position == 0) R.style.AppThemeOverlay_Lannister else R.style.AppThemeOverlay_Baratheon
-                     if (currentThemeId != newThemeId) {
-                         AppConfig.appThemeId = newThemeId
-                         toolbar.context.setTheme(newThemeId)
-                     }*/
-         */
-        vb.tabsAppBar.coloredTabs =
-            viewModel.houseTypes.map { ColoredTab(it.shortName, it.colorPrimaryId) }
-        ColoredTabsAppBar.ColoredTabsAppBarMediator(vb.tabsAppBar, vb.viewPager).attach()
+        vb.tabsAppBar.apply {
+            coloredTabs = viewModel.houseTypes.map { ColoredTab(it.shortName, it.colorPrimaryId) }
+            onTabSelected = {
+                context.setTheme(viewModel.houseTypes[it].themeId)
+            }
+            ColoredTabsAppBar.ColoredTabsAppBarMediator(this, vb.viewPager).attach()
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(onSearchBackPressedCallback)
         viewModel.isSearchVisible.observeState(this) {
             updateSearchViewVisibility(it)
         }
@@ -128,6 +113,22 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean = false
+
+    private fun initSplashAnimation() {
+        vb.imgSplash.setImageDrawable(requireContext().getDrawable(args.splashImageId))
+        vb.brokenView.setCallback(object : BrokenCallback() {
+            override fun onFallingEnd(v: View?) {
+                resetSplashAnimation()
+            }
+        })
+        if (viewModel.wasSplashAnimationShown) {
+            resetSplashAnimation()
+        } else {
+            vb.imgSplash.addOneTimeOnGlobalLayoutListener {
+                vb.brokenView.createAnimator(vb.imgSplash).start()
+            }
+        }
+    }
 
     private fun updateSearchViewVisibility(isVisible: Boolean) {
         menuSearchView?.apply {

@@ -30,49 +30,49 @@
         <item name="queryBackground">@null</item>
     </style>
 
-    <style name="AppThemeOverlay.Stark" parent="ThemeOverlay.AppCompat.Light">
+    <style name="AppTheme.Stark">
         <item name="colorPrimary">@color/stark_primary</item>
         <item name="colorPrimaryDark">@color/stark_dark</item>
         <item name="colorAccent">@color/stark_accent</item>
         <item name="colorButtonNormal">@color/stark_primary</item>
     </style>
 
-    <style name="AppThemeOverlay.Martel" parent="ThemeOverlay.AppCompat.Light">
+    <style name="AppTheme.Martel">
         <item name="colorPrimary">@color/martel_primary</item>
         <item name="colorPrimaryDark">@color/martel_dark</item>
         <item name="colorAccent">@color/martel_accent</item>
         <item name="colorButtonNormal">@color/martel_primary</item>
     </style>
 
-    <style name="AppThemeOverlay.Tyrel" parent="ThemeOverlay.AppCompat.Light">
+    <style name="AppTheme.Tyrel">
         <item name="colorPrimary">@color/tyrel_primary</item>
         <item name="colorPrimaryDark">@color/tyrel_dark</item>
         <item name="colorAccent">@color/tyrel_accent</item>
         <item name="colorButtonNormal">@color/tyrel_primary</item>
     </style>
 
-    <style name="AppThemeOverlay.Targaryen" parent="ThemeOverlay.AppCompat.Light">
+    <style name="AppTheme.Targaryen">
         <item name="colorPrimary">@color/targaryen_primary</item>
         <item name="colorPrimaryDark">@color/targaryen_dark</item>
         <item name="colorAccent">@color/targaryen_accent</item>
         <item name="colorButtonNormal">@color/targaryen_primary</item>
     </style>
 
-    <style name="AppThemeOverlay.Lannister" parent="ThemeOverlay.AppCompat.Light">
+    <style name="AppTheme.Lannister">
         <item name="colorPrimary">@color/lannister_primary</item>
         <item name="colorPrimaryDark">@color/lannister_dark</item>
         <item name="colorAccent">@color/lannister_accent</item>
         <item name="colorButtonNormal">@color/lannister_primary</item>
     </style>
 
-    <style name="AppThemeOverlay.Baratheon" parent="ThemeOverlay.AppCompat.Light">
+    <style name="AppTheme.Baratheon">
         <item name="colorPrimary">@color/baratheon_primary</item>
         <item name="colorPrimaryDark">@color/baratheon_dark</item>
         <item name="colorAccent">@color/baratheon_accent</item>
         <item name="colorButtonNormal">@color/baratheon_primary</item>
     </style>
 
-    <style name="AppThemeOverlay.Greyjoy" parent="ThemeOverlay.AppCompat.Light">
+    <style name="AppTheme.Greyjoy">
         <item name="colorPrimary">@color/greyjoy_primary</item>
         <item name="colorPrimaryDark">@color/greyjoy_dark</item>
         <item name="colorAccent">@color/greyjoy_accent</item>

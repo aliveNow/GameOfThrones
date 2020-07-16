@@ -31,6 +31,8 @@ class ColoredTabsAppBar(context: Context, attrs: AttributeSet) : ConstraintLayou
     val tabLayout: TabLayout
         get() = vb.tabs
 
+    var onTabSelected: ((position: Int) -> Unit)? = null
+
     private val vb = ViewColoredTabsAppBarBinding.inflate(LayoutInflater.from(context), this)
     private var lastMotionEvent: MotionEvent? = null
     private var lastAnimation: Animator? = null
@@ -40,7 +42,10 @@ class ColoredTabsAppBar(context: Context, attrs: AttributeSet) : ConstraintLayou
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                animateTabChangeOnlyOnEvent(tabLayout.selectedTabPosition)
+                tab?.position?.let {
+                    animateTabChangeOnlyOnEvent(it)
+                    onTabSelected?.invoke(it)
+                }
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -155,7 +160,6 @@ class ColoredTabsAppBar(context: Context, attrs: AttributeSet) : ConstraintLayou
             TabLayoutMediator(tabsAppBar.tabLayout, viewPager) { tab, position ->
                 tab.text = tabsAppBar.coloredTabs[position].name
             }
-        var onPageSelected: ((position: Int) -> Unit)? = null
 
         fun attach() {
             viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
