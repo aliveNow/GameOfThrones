@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">Game Of Thrones</string>
 
+    <string name="splash_no_connection_error">Интернет недоступен - приложение не может быть запущено. Подключитесь к интернету и перезапустите приложение</string>
+
     <string name="characters_list_search_hint">Search character</string>
-    
+
     <string name="character_words">Words:</string>
     <string name="character_born">Born:</string>
     <string name="character_titles">Titles:</string>

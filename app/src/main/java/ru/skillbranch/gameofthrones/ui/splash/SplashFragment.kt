@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.zys.brokenview.BrokenCallback
 import com.zys.brokenview.BrokenConfig
 import org.koin.android.ext.android.getKoin
@@ -16,8 +16,8 @@ import ru.skillbranch.gameofthrones.databinding.FragmentSplashBinding
 import ru.skillbranch.gameofthrones.ui.splash.SplashViewModel.AnimationState
 import ru.skillbranch.gameofthrones.utils.ui.addOneTimeOnGlobalLayoutListener
 import ru.skillbranch.gameofthrones.utils.ui.getDrawableById
+import ru.skillbranch.gameofthrones.utils.ui.observeEvent
 import ru.skillbranch.gameofthrones.utils.ui.observeState
-
 
 class SplashFragment : Fragment() {
 
@@ -33,9 +33,24 @@ class SplashFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initViews()
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = getKoin().getViewModel(this, SplashViewModel::class)
+        viewModel.animation.observeState(this) {
+            it?.let { startAnimation(it) }
+        }
+        viewModel.showError.observeEvent(this) {
+            it?.let { Snackbar.make(requireView(), it, Snackbar.LENGTH_INDEFINITE).show() }
+        }
+    }
+
+    private fun initViews() {
         vb.brokenView.setCallback(object : BrokenCallback() {
             override fun onFallingEnd(v: View?) {
-                onAnimationEnd()
+                viewModel.animationEnded()
             }
         })
         vb.imgForeground.addOneTimeOnGlobalLayoutListener {
@@ -43,23 +58,14 @@ class SplashFragment : Fragment() {
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = getKoin().getViewModel(this, SplashViewModel::class)
-        viewModel.animation.observeState(this) {
-            startAnimation(it)
-        }
-    }
-
-    private fun onAnimationEnd() {
-        viewModel.animationEnded()
-    }
-
     private fun startAnimation(animation: AnimationState) {
         val animView = vb.imgForeground
-        if (requireView().isAttachedToWindow && animView.height > 0 && vb.brokenView.getAnimator(animView) == null) {
+        if (requireView().isAttachedToWindow && animView.height > 0 && vb.brokenView.getAnimator(
+                animView
+            ) == null
+        ) {
             resetBrokenView(animation)
-            if (viewModel.needToNavigateToMain) {
+            if (viewModel.needNavigateToMain) {
                 findNavController().navigate(
                     SplashFragmentDirections.actionFromSplashFragmentToMainFragment(splashImageId = animation.animatingImageId)
                 )
