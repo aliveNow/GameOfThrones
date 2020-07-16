@@ -3,9 +3,9 @@ package ru.skillbranch.gameofthrones.repositories
 import android.app.Application
 import android.net.Uri
 import androidx.annotation.VisibleForTesting
+import retrofit2.Call
 import retrofit2.HttpException
 import ru.skillbranch.gameofthrones.AppConfig
-import ru.skillbranch.gameofthrones.HouseType
 import ru.skillbranch.gameofthrones.data.local.AppDatabase
 import ru.skillbranch.gameofthrones.data.local.entities.Character
 import ru.skillbranch.gameofthrones.data.local.entities.CharacterFull
@@ -38,6 +38,7 @@ object RootRepository {
     }
 
     suspend fun loadDataAndInsertToDB() {
+        @Suppress("UNUSED_VARIABLE")
         val isDropped = suspendCoroutine { continuation: Continuation<Unit> ->
             dropDb {
                 continuation.resumeWith(Result.success(Unit))
@@ -84,10 +85,6 @@ object RootRepository {
             }
         }
 
-    //TODO: remove
-    suspend fun findCharactersByHouseName2(name: String): List<Character> =
-        db.getCharacterDao().getCharactersByHouseName2(name)
-
     suspend fun findCharacterFullById(id: String): CharacterFull =
         suspendCoroutine { continuation: Continuation<CharacterFull> ->
             findCharacterFullById(id) {
@@ -105,15 +102,8 @@ object RootRepository {
         val houses = mutableListOf<HouseRes>()
         val pageNum = FIRST_PAGE_NUM
         do {
-            val newHouses: List<HouseRes>
-            with(api.getAllHouses(pageNum, MAX_PAGE_SIZE).execute()) {
-                if (isSuccessful) {
-                    newHouses = body() ?: emptyList()
-                    houses.addAll(newHouses)
-                } else {
-                    throw HttpException(this)
-                }
-            }
+            val newHouses = api.getAllHouses(pageNum, MAX_PAGE_SIZE).executeOrException()
+            houses.addAll(newHouses)
         } while (newHouses.isNotEmpty())
         result(houses)
     }
@@ -127,16 +117,11 @@ object RootRepository {
     fun getNeedHouses(vararg houseNames: String, result: (houses: List<HouseRes>) -> Unit) {
         val houses = mutableListOf<HouseRes>()
         for (houseName in houseNames) {
-            with(api.getHouseByName(houseName).execute()) {
-                if (isSuccessful) {
-                    houses.add(
-                        body()?.takeIf { it.isNotEmpty() }?.first()
-                            ?: throw IllegalArgumentException("$houseName not found")
-                    )
-                } else {
-                    throw HttpException(this)
-                }
-            }
+            houses.add(
+                api.getHouseByName(houseName).executeOrException()
+                    .takeIf { it.isNotEmpty() }?.first()
+                    ?: throw IllegalArgumentException("$houseName not found")
+            )
         }
         result(houses)
     }
@@ -156,13 +141,9 @@ object RootRepository {
             for (house in houses) {
                 val characters = mutableListOf<CharacterRes>()
                 for (characterUrl in house.swornMembers) {
-                    with(api.getCharacter(characterUrl).execute()) {
-                        if (isSuccessful) {
-                            body()?.let { characters.add(it) }
-                        } else {
-                            throw HttpException(this)
-                        }
-                    }
+                    characters.add(
+                        api.getCharacter(characterUrl).executeOrException()
+                    )
                     //FIXME: для тестирования
                     if (characters.size == 3) {
                         break
@@ -182,26 +163,25 @@ object RootRepository {
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun insertHouses(houses: List<HouseRes>, complete: () -> Unit) {
-        val houseNamesMap =
-            db.getHouseDao().insertAll(houses.map {
-                House(
-                    id = it.url.getId(),
-                    name = it.name,
-                    shortName = checkNotNull(AppConfig.HOUSE_NAMES_MAP[it.name]),
-                    region = it.region,
-                    coatOfArms = it.coatOfArms,
-                    words = it.words,
-                    titles = it.titles,
-                    seats = it.seats,
-                    currentLord = it.currentLord.getId(),
-                    heir = it.heir.getId(),
-                    overlord = it.overlord.getId(),
-                    founded = it.founded,
-                    founder = it.founder.getId(),
-                    diedOut = it.diedOut,
-                    ancestralWeapons = it.ancestralWeapons
-                )
-            })
+        db.getHouseDao().insertAll(houses.map {
+            House(
+                id = it.url.getId(),
+                name = it.name,
+                shortName = checkNotNull(AppConfig.HOUSE_NAMES_MAP[it.name]),
+                region = it.region,
+                coatOfArms = it.coatOfArms,
+                words = it.words,
+                titles = it.titles,
+                seats = it.seats,
+                currentLord = it.currentLord.getId(),
+                heir = it.heir.getId(),
+                overlord = it.overlord.getId(),
+                founded = it.founded,
+                founder = it.founder.getId(),
+                diedOut = it.diedOut,
+                ancestralWeapons = it.ancestralWeapons
+            )
+        })
         complete.invoke()
     }
 
@@ -275,6 +255,15 @@ object RootRepository {
     fun isNeedUpdate(result: (isNeed: Boolean) -> Unit) {
         result(db.getCharacterDao().getRowCount() == 0)
     }
+
+    private fun <T> Call<T>.executeOrException(): T =
+        with(execute()) {
+            if (isSuccessful) {
+                checkNotNull(body())
+            } else {
+                throw HttpException(this)
+            }
+        }
 
     private fun String.getId(): String = Uri.parse(this).lastPathSegment ?: this
 
