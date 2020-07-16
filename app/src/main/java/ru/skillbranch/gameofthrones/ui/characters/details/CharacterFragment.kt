@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.snackbar.Snackbar
 import org.koin.android.ext.android.getKoin
 import org.koin.android.viewmodel.koin.getViewModel
 import org.koin.core.parameter.parametersOf
@@ -59,6 +60,11 @@ class CharacterFragment : Fragment() {
         viewModel.title.observe(viewLifecycleOwner, Observer {
             vb.toolbar.title = it
         })
+        viewModel.showMessage.observeEvent(this) {
+            it?.let {
+                Snackbar.make(vb.coordinator, it, Snackbar.LENGTH_INDEFINITE).show()
+            }
+        }
         viewModel.finish.observeEvent(this) {
             requireActivity().onBackPressed()
         }

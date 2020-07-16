@@ -18,6 +18,7 @@ class CharacterViewModel(
     val houseType = checkNotNull(HouseType.findByShortName(shortHouseName))
     val title = MutableLiveData<String>()
     val character = MutableLiveData<CharacterFull>()
+    val showMessage = EventLiveData<String>()
     val finish = EventLiveData<Unit>()
 
     init {
@@ -29,9 +30,13 @@ class CharacterViewModel(
             try {
                 character.value = withContext(Dispatchers.IO) {
                     RootRepository.findCharacterFullById(characterId)
+                }.also {
+                    title.value = it.name
+                    if (it.died.isNotEmpty()) {
+                        showMessage.value = Event(it.died)
+                    }
                 }
-                title.value = character.value?.name
-            }catch (e : Exception) {
+            } catch (e: Exception) {
                 finish.value = Event(Unit)
             }
         }
