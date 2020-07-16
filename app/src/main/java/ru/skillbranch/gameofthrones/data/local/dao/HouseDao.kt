@@ -14,6 +14,9 @@ interface HouseDao {
     @Query("SELECT * FROM house WHERE name = :name limit 1")
     fun getHouseByName(name: String): House
 
+    @Query("SELECT COUNT(id) FROM house")
+    fun getRowCount(): Int
+
     @Query("DELETE FROM house")
     fun dropTable()
 

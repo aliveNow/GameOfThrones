@@ -18,6 +18,12 @@ interface IceAndFireApi {
     @GET("/api/houses")
     fun getHouseByName(@Query("name") name: String): Call<List<HouseRes>>
 
+    @GET("/api/characters")
+    fun getAllCharacters(
+        @Query("page") pageNum: Int,
+        @Query("pageSize") pageSize: Int
+    ): Call<List<CharacterRes>>
+
     @GET
     fun getCharacter(@Url url: String): Call<CharacterRes>
 

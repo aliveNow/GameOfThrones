@@ -3,24 +3,24 @@ package ru.skillbranch.gameofthrones
 object AppConfig {
     val NEED_HOUSES = arrayOf(
         "House Stark of Winterfell",
-        "House Lannister of Casterly Rock"
-        //FIXME: uncomment
-        /*"House Targaryen of King's Landing",
+        "House Lannister of Casterly Rock",
+        "House Targaryen of King's Landing",
         "House Greyjoy of Pyke",
         "House Tyrell of Highgarden",
         "House Baratheon of Dragonstone",
-        "House Nymeros Martell of Sunspear" */
+        "House Nymeros Martell of Sunspear"
     )
     val HOUSE_NAMES_MAP = HouseType.values().map { it.fullName to it.shortName }.toMap()
     const val BASE_URL = "https://www.anapioficeandfire.com/"
 }
 
-//FIXME: temporary, remake to styles
 enum class HouseType(
     val fullName: String,
     val shortName: String,
+    @Suppress("unused")
     val colorAccentId: Int,
     val colorPrimaryId: Int,
+    @Suppress("unused")
     val colorDarkId: Int,
     val coatOfArmsId: Int,
     val iconId: Int,

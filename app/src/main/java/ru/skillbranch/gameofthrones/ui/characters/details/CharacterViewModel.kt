@@ -33,7 +33,7 @@ class CharacterViewModel(
                 }.also {
                     title.value = it.name
                     if (it.died.isNotEmpty()) {
-                        showMessage.value = Event(it.died)
+                        showMessage.value = Event("Died ${it.died}")
                     }
                 }
             } catch (e: Exception) {
