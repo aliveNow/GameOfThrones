@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import ru.skillbranch.gameofthrones.utils.ui.data.EventLiveData
 
 //region VIEW
@@ -20,6 +22,19 @@ inline fun View.addOneTimeOnGlobalLayoutListener(crossinline listener: () -> Uni
                 listener.invoke()
             }
         })
+}
+//endregion
+
+//region RECYCLER VIEW
+fun RecyclerView.scrollToPositionAnimated(position: Int, animated: Boolean = true) {
+    val linearLayoutManager = layoutManager as? LinearLayoutManager
+    linearLayoutManager?.let {
+        if (animated) {
+            it.smoothScrollToPosition(this, null, position)
+        } else {
+            it.scrollToPositionWithOffset(position, 0)
+        }
+    }
 }
 //endregion
 

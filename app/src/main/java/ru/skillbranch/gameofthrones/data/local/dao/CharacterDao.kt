@@ -9,7 +9,7 @@ interface CharacterDao {
     @Insert
     fun insertAll(characters: List<Character>)
 
-    @Query("SELECT id, houseId, name, titles, aliases FROM character WHERE houseId = :name")
+    @Query("SELECT id, houseId, name, titles, aliases FROM character WHERE houseId = :name ORDER BY name")
     fun getCharactersByHouseName(name: String): List<CharacterItem>
 
     @Transaction

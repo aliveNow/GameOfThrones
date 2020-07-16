@@ -67,6 +67,9 @@ class MainFragment : Fragment(), SearchView.OnQueryTextListener {
             ViewPagerFragmentStateAdapter(requireActivity(), viewModel.houseNames)
         vb.tabsAppBar.apply {
             coloredTabs = viewModel.houseTypes.map { ColoredTab(it.shortName, it.colorPrimaryId) }
+            onTabSelected = {
+                requireContext().setTheme(viewModel.houseTypes[it].themeId)
+            }
             ColoredTabsAppBar.ColoredTabsAppBarMediator(this, vb.viewPager).attach()
         }
 

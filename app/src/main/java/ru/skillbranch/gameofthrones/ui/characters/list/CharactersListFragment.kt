@@ -15,6 +15,7 @@ import ru.skillbranch.gameofthrones.HouseType
 import ru.skillbranch.gameofthrones.databinding.FragmentCharactersListBinding
 import ru.skillbranch.gameofthrones.ui.main.MainFragmentDirections
 import ru.skillbranch.gameofthrones.utils.ui.observeState
+import ru.skillbranch.gameofthrones.utils.ui.scrollToPositionAnimated
 
 
 class CharactersListFragment : Fragment() {
@@ -44,6 +45,9 @@ class CharactersListFragment : Fragment() {
         viewModel.itemsList.observeState(this) {
             adapter.items = it
             adapter.notifyDataSetChanged()
+            if (it.isNotEmpty()) {
+                vb.rvList.scrollToPositionAnimated(0, true)
+            }
         }
     }
 

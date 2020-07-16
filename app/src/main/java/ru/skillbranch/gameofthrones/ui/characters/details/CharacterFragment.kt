@@ -13,7 +13,6 @@ import com.google.android.material.snackbar.Snackbar
 import org.koin.android.ext.android.getKoin
 import org.koin.android.viewmodel.koin.getViewModel
 import org.koin.core.parameter.parametersOf
-import ru.skillbranch.gameofthrones.HouseType
 import ru.skillbranch.gameofthrones.data.local.entities.RelativeCharacter
 import ru.skillbranch.gameofthrones.databinding.FragmentCharacterBinding
 import ru.skillbranch.gameofthrones.utils.ui.observeEvent
@@ -30,9 +29,6 @@ class CharacterFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        HouseType.findByShortName(args.shortHouseName)?.let {
-            requireContext().setTheme(it.themeId)
-        }
         return FragmentCharacterBinding.inflate(inflater, container, false)
             .also { vb = it }
             .root
