@@ -6,14 +6,14 @@
     tools:context=".ui.splash.SplashFragment">
 
     <ImageView
-        android:id="@+id/imgSecond"
+        android:id="@+id/imgBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
         android:src="@drawable/stark_coast_of_arms" />
 
     <ImageView
-        android:id="@+id/imgFirst"
+        android:id="@+id/imgForeground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"

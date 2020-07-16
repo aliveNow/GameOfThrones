@@ -1,16 +1,22 @@
 package ru.skillbranch.gameofthrones.ui.splash
 
+import android.graphics.Point
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.zys.brokenview.BrokenCallback
-import ru.skillbranch.gameofthrones.R
+import com.zys.brokenview.BrokenConfig
+import org.koin.android.ext.android.getKoin
+import org.koin.android.viewmodel.koin.getViewModel
 import ru.skillbranch.gameofthrones.databinding.FragmentSplashBinding
+import ru.skillbranch.gameofthrones.ui.splash.SplashViewModel.AnimationState
+import ru.skillbranch.gameofthrones.utils.ui.getDrawableById
+import ru.skillbranch.gameofthrones.utils.ui.observeState
+
 
 class SplashFragment : Fragment() {
 
@@ -24,20 +30,6 @@ class SplashFragment : Fragment() {
         .also { vb = it }
         .root
 
-    var firstImageId: Int = R.drawable.spash
-    var secondImageId: Int = R.drawable.stark_coast_of_arms
-
-    val imageIds = listOf(
-        R.drawable.stark_coast_of_arms,
-        R.drawable.lannister__coast_of_arms,
-        R.drawable.baratheon_coast_of_arms,
-        R.drawable.greyjoy_coast_of_arms,
-        R.drawable.martel_coast_of_arms,
-        R.drawable.baratheon_coast_of_arms
-    )
-
-    var imagePosition = 0
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vb.brokenView.setCallback(object : BrokenCallback() {
@@ -45,42 +37,57 @@ class SplashFragment : Fragment() {
                 onAnimationEnd()
             }
         })
+        vb.imgForeground.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                view.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                viewModel.animation.value?.let { startAnimation(it) }
+            }
+        })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(SplashViewModel::class.java)
-        viewModel.navigateToMain.observe(viewLifecycleOwner, Observer {
-
-        })
-        viewModel.showAnimation.observe(viewLifecycleOwner, Observer {
-            vb.brokenView.createAnimator(vb.imgFirst)
-                .start()
-        })
-    }
-
-    override fun onResume() {
-        super.onResume()
-
+        viewModel = getKoin().getViewModel(this, SplashViewModel::class)
+        viewModel.animation.observeState(this) {
+            startAnimation(it)
+        }
     }
 
     private fun onAnimationEnd() {
-        imagePosition = when (imagePosition) {
-            imageIds.size - 1 -> 0
-            else -> imagePosition + 1
+        viewModel.animationEnded()
+    }
+
+    private fun startAnimation(animation: AnimationState) {
+        val animView = vb.imgForeground
+        if (requireView().isAttachedToWindow && animView.height > 0 && vb.brokenView.getAnimator(animView) == null) {
+            resetBrokenView(animation)
+            if (viewModel.needToNavigateToMain) {
+                findNavController().navigate(
+                    SplashFragmentDirections.actionFromSplashFragmentToMainFragment(splashImageId = animation.animatingImageId)
+                )
+            } else {
+                animateBrokenView(animation)
+            }
         }
-        firstImageId = secondImageId
-        secondImageId = imageIds[imagePosition]
-        vb.imgFirst.setImageDrawable(requireContext().getDrawable(firstImageId))
-        vb.imgSecond.setImageDrawable(requireContext().getDrawable(secondImageId))
-        vb.imgFirst.visibility = View.VISIBLE
+    }
+
+    private fun resetBrokenView(animation: AnimationState) {
+        vb.imgBackground.setImageDrawable(getDrawableById(animation.backgroundImageId))
+        vb.imgForeground.apply {
+            setImageDrawable(getDrawableById(animation.animatingImageId))
+            visibility = View.VISIBLE
+        }
         vb.brokenView.reset()
-        if (viewModel.needToNavigateToMain) {
-            findNavController().navigate(
-                SplashFragmentDirections.actionFromSplashFragmentToMainFragment(splashImageId = firstImageId)
-            )
-        } else {
-            vb.brokenView.createAnimator(vb.imgFirst).start()
+    }
+
+    private fun animateBrokenView(animation: AnimationState) {
+        with(vb.imgForeground) {
+            val point = Point(width / 2, height / 2)
+            val config = BrokenConfig(width, height).apply {
+                breakDuration = (animation.duration * 0.28).toInt()
+                fallDuration = (animation.duration * 0.72).toInt()
+            }
+            vb.brokenView.createAnimator(this, point, config).start()
         }
     }
 

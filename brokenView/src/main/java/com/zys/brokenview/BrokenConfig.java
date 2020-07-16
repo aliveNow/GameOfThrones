@@ -5,9 +5,9 @@ import android.graphics.Region;
 import android.view.View;
 
 public class BrokenConfig {
-    int complexity = 12;
-    int breakDuration = 700;
-    int fallDuration = 2000;
+    public int complexity = 12;
+    public int breakDuration = 700;
+    public int fallDuration = 2000;
     int circleRiftsRadius = 66;
     int maxWidth;
     int maxHeight;
