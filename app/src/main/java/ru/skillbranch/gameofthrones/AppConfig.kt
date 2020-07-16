@@ -56,26 +56,6 @@ enum class HouseType(
         iconId = R.drawable.targaryen_icon,
         themeId = R.style.AppTheme_Targaryen
     ),
-    GREYJOY(
-        fullName = "House Greyjoy of Pyke",
-        shortName = "Greyjoy",
-        colorAccentId = R.color.greyjoy_accent,
-        colorPrimaryId = R.color.greyjoy_primary,
-        colorDarkId = R.color.greyjoy_dark,
-        coatOfArmsId = R.drawable.greyjoy_coast_of_arms,
-        iconId = R.drawable.greyjoy_icon,
-        themeId = R.style.AppTheme_Greyjoy
-    ),
-    TYRELL(
-        fullName = "House Tyrell of Highgarden",
-        shortName = "Tyrell",
-        colorAccentId = R.color.tyrel_accent,
-        colorPrimaryId = R.color.tyrel_primary,
-        colorDarkId = R.color.tyrel_dark,
-        coatOfArmsId = R.drawable.tyrel_coast_of_arms,
-        iconId = R.drawable.tyrel_icon,
-        themeId = R.style.AppTheme_Tyrel
-    ),
     BARATHEON(
         fullName = "House Baratheon of Dragonstone",
         shortName = "Baratheon",
@@ -86,6 +66,16 @@ enum class HouseType(
         iconId = R.drawable.baratheon_icon,
         themeId = R.style.AppTheme_Baratheon
     ),
+    GREYJOY(
+        fullName = "House Greyjoy of Pyke",
+        shortName = "Greyjoy",
+        colorAccentId = R.color.greyjoy_accent,
+        colorPrimaryId = R.color.greyjoy_primary,
+        colorDarkId = R.color.greyjoy_dark,
+        coatOfArmsId = R.drawable.greyjoy_coast_of_arms,
+        iconId = R.drawable.greyjoy_icon,
+        themeId = R.style.AppTheme_Greyjoy
+    ),
     MARTELL(
         fullName = "House Nymeros Martell of Sunspear",
         shortName = "Martell",
@@ -95,6 +85,16 @@ enum class HouseType(
         coatOfArmsId = R.drawable.martel_coast_of_arms,
         iconId = R.drawable.martel_icon,
         themeId = R.style.AppTheme_Martel
+    ),
+    TYRELL(
+        fullName = "House Tyrell of Highgarden",
+        shortName = "Tyrell",
+        colorAccentId = R.color.tyrel_accent,
+        colorPrimaryId = R.color.tyrel_primary,
+        colorDarkId = R.color.tyrel_dark,
+        coatOfArmsId = R.drawable.tyrel_coast_of_arms,
+        iconId = R.drawable.tyrel_icon,
+        themeId = R.style.AppTheme_Tyrel
     );
 
     companion object {
